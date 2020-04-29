@@ -1,6 +1,4 @@
-export const sum = (a: number, b: number): number => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('boop')
-  }
-  return a + b
-}
+export * from './clauses'
+export * from './createRunner'
+export * from './query'
+export * from './types'
