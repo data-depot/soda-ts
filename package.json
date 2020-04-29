@@ -30,11 +30,27 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-lerna-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{ts,js,tsx,css,md}": [
+      "prettier --write"
+    ]
+  },
   "name": "soda-ts",
   "author": "Walee Ahmed",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
+    "@types/debug": "^4.1.5",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.4",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "commitizen": "^4.0.4",
@@ -50,9 +66,16 @@
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.2.5",
     "jest": "^25.5.0",
+    "lint-staged": "^10.2.0",
+    "prettier": "^2.0.5",
     "ts-jest": "^25.4.0",
     "tsdx": "^0.13.2",
     "tslib": "^1.11.1",
     "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "got": "^11.0.2",
+    "ramda": "^0.27.0"
   }
 }
