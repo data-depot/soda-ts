@@ -1,4 +1,5 @@
-import type { Query } from './types'
+// local
+import { Query } from './types'
 
 /**
  * options for the `createQuery` fn
