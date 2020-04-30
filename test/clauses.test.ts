@@ -8,14 +8,9 @@ import {
   Clause
 } from '../src'
 
-import { config } from 'dotenv'
-
-config()
-
 const SRC = 'w7w3-xahh'
 const DOMAIN = 'data.cityofnewyork.us'
 const CLAUSE = 'test'
-// const URL = 'https://data.cityofnewyork.us/resource/w7w3-xahh.json'
 
 describe('query', () => {
   it('queryCreator', () => {
@@ -53,6 +48,8 @@ describe('createRunner', () => {
   })
 
   it('successfully grabs with authentication ', async () => {
+    // TODO: add support for .env in CI/CD
+    // expect(authOpts.appToken).not.toBeUndefined()
     const res = await authenticatedRunner(query)
     expect(res.length).toBeGreaterThan(1)
   })
