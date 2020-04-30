@@ -1,9 +1,16 @@
-import { createQuery } from '../src/query'
-import type { Query } from '../src/types'
-import { createRunner } from '../src/createRunner'
+import {
+  createQuery,
+  createClause,
+  Query,
+  createRunner,
+  clauseTransformer,
+  queryClauseTransformer,
+  Clause
+} from '../src'
 
 const SRC = 'w7w3-xahh'
 const DOMAIN = 'data.cityofnewyork.us'
+const CLAUSE = 'test'
 // const URL = 'https://data.cityofnewyork.us/resource/w7w3-xahh.json'
 
 describe('query', () => {
@@ -27,9 +34,54 @@ describe('createRunner', () => {
     query = createQuery('w7w3-xahh')
     runner = createRunner()
   })
-  it('', async () => {
+  it('successfully grabs ', async () => {
     const res = await runner(query)
 
     expect(res.length).toBeGreaterThan(1)
+  })
+})
+
+describe('clauses', () => {
+  let query: Query
+
+  beforeEach(() => {
+    query = createQuery('w7w3-xahh')
+  })
+
+  it('createClause attaches to query', async () => {
+    const clause = createClause(CLAUSE)(query, 'test')
+    expect(clause.clauses).toHaveLength(1)
+    expect(clause.clauses[0]).toMatchObject({
+      name: expect.stringMatching(CLAUSE)
+    })
+  })
+
+  it('clause transforms', async () => {
+    const transformedClause = clauseTransformer({
+      name: '$where',
+      value: 'test'
+    })
+
+    expect(transformedClause).toHaveProperty('$where')
+    expect(transformedClause.$where).toBe('test')
+  })
+
+  it('adds clauses to query', async () => {
+    const clauses: Clause[] = [
+      { name: '$where', value: 'test' },
+      { name: '$select', value: 'test1' },
+      { name: '$limit', value: '5' }
+    ]
+
+    const transformedClause = queryClauseTransformer(
+      clauses
+    )
+
+    expect(transformedClause).toHaveProperty('$where')
+    expect(transformedClause).toHaveProperty('$select')
+    expect(transformedClause).toHaveProperty('$limit')
+    expect(transformedClause.$where).toBe('test')
+    expect(transformedClause.$select).toBe('test1')
+    expect(transformedClause.$limit).toBe('5')
   })
 })
