@@ -13,3 +13,12 @@ export interface Query {
   /** rest path associated with api and domain */
   apiPath: 'resource' | 'api/views' | 'api/catalog/v1'
 }
+
+export interface Authorization {
+  type: 'TOKEN' | 'USERNAME_PASS'
+  username?: string
+  password?: string
+  token?: string
+  domain: string
+  timeout: number
+}
