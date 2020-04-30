@@ -2,58 +2,12 @@ import {
   createQuery,
   createClause,
   Query,
-  createRunner,
   clauseTransformer,
   queryClauseTransformer,
   Clause
 } from '../src'
 
-const SRC = 'w7w3-xahh'
-const DOMAIN = 'data.cityofnewyork.us'
 const CLAUSE = 'test'
-
-describe('query', () => {
-  it('queryCreator', () => {
-    const query = createQuery(SRC)
-
-    expect(query).toStrictEqual({
-      src: SRC,
-      domain: DOMAIN,
-      apiPath: 'resource',
-      clauses: []
-    })
-  })
-})
-
-describe('createRunner', () => {
-  let query: Query
-  let runner: ReturnType<typeof createRunner>
-
-  const authOpts = {
-    appToken: process.env.APP_TOKEN
-  }
-
-  let authenticatedRunner: ReturnType<typeof createRunner>
-
-  beforeAll(() => {
-    query = createQuery('w7w3-xahh')
-    runner = createRunner()
-    authenticatedRunner = createRunner(authOpts)
-  })
-
-  it('successfully grabs ', async () => {
-    const res = await runner(query)
-
-    expect(res.length).toBeGreaterThan(1)
-  })
-
-  it('successfully grabs with authentication ', async () => {
-    // TODO: add support for .env in CI/CD
-    // expect(authOpts.appToken).not.toBeUndefined()
-    const res = await authenticatedRunner(query)
-    expect(res.length).toBeGreaterThan(1)
-  })
-})
 
 describe('clauses', () => {
   let query: Query
