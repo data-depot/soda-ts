@@ -8,6 +8,10 @@ import {
   Clause
 } from '../src'
 
+import { config } from 'dotenv'
+
+config()
+
 const SRC = 'w7w3-xahh'
 const DOMAIN = 'data.cityofnewyork.us'
 const CLAUSE = 'test'
@@ -30,13 +34,26 @@ describe('createRunner', () => {
   let query: Query
   let runner: ReturnType<typeof createRunner>
 
+  const authOpts = {
+    appToken: process.env.APP_TOKEN
+  }
+
+  let authenticatedRunner: ReturnType<typeof createRunner>
+
   beforeAll(() => {
     query = createQuery('w7w3-xahh')
     runner = createRunner()
+    authenticatedRunner = createRunner(authOpts)
   })
+
   it('successfully grabs ', async () => {
     const res = await runner(query)
 
+    expect(res.length).toBeGreaterThan(1)
+  })
+
+  it('successfully grabs with authentication ', async () => {
+    const res = await authenticatedRunner(query)
     expect(res.length).toBeGreaterThan(1)
   })
 })
