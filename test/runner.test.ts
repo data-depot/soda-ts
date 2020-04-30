@@ -23,9 +23,18 @@ describe('createRunner', () => {
   })
 
   it('successfully grabs with authentication ', async () => {
-    // TODO: add support for .env in CI/CD
-    // expect(authOpts.appToken).not.toBeUndefined()
+    expect(authOpts.appToken).not.toBeUndefined()
     const res = await authenticatedRunner(query)
     expect(res.length).toBeGreaterThan(1)
+  })
+
+  it('runner fails when invalid token provided', async () => {
+    const misAuthenticatedRunner = createRunner({
+      appToken: 'au7shiadu7fhdas7s'
+    })
+
+    await expect(
+      misAuthenticatedRunner(query)
+    ).rejects.toThrow()
   })
 })
