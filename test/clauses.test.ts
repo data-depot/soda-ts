@@ -62,8 +62,9 @@ describe('clauses', () => {
       value: 'test'
     })
 
-    expect(transformedClause).toHaveProperty('$where')
-    expect(transformedClause.$where).toBe('test')
+    expect(transformedClause).toHaveLength(2)
+    expect(transformedClause[0]).toBe('$where')
+    expect(transformedClause[1]).toBe('test')
   })
 
   it('adds clauses to query', async () => {
@@ -76,12 +77,7 @@ describe('clauses', () => {
     const transformedClause = queryClauseTransformer(
       clauses
     )
-
-    expect(transformedClause).toHaveProperty('$where')
-    expect(transformedClause).toHaveProperty('$select')
-    expect(transformedClause).toHaveProperty('$limit')
-    expect(transformedClause.$where).toBe('test')
-    expect(transformedClause.$select).toBe('test1')
-    expect(transformedClause.$limit).toBe('5')
+    expect(transformedClause.length).toBeGreaterThan(1)
+    expect(transformedClause[1][0]).toBe('$select')
   })
 })

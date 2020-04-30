@@ -1,5 +1,3 @@
-import { mergeAll } from 'ramda'
-
 import { Query, Clause } from './types'
 
 /**
@@ -17,18 +15,14 @@ export const createClause = (
 export const where = createClause('$where')
 export const select = createClause('$select')
 
-interface GotReqParams {
-  [key: string]: Clause['value']
-}
+type GotReqParams = [Clause['name'], Clause['value']]
 
 export const clauseTransformer = (
   clause: Clause
-): GotReqParams => ({
-  [clause.name]: clause.value
-})
+): GotReqParams => [clause.name, clause.value]
 
 export const queryClauseTransformer = (
   clauses: Clause[]
-): GotReqParams => {
-  return mergeAll(clauses.map(clauseTransformer))
+): GotReqParams[] => {
+  return clauses.map(clauseTransformer)
 }
