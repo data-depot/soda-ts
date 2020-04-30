@@ -45,7 +45,6 @@ export const createRunner = <T>(
       .json<T[]>()
     return res
   } catch (e) {
-    console.error(e)
     throw new Error(e.message)
   }
 }

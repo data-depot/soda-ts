@@ -43,9 +43,9 @@ export const clauseTransformer = (
 ): URLReqParams => [clause.name, clause.value]
 
 /**
+ * transform clauses in query into consumption in `URLParams`
  *
  * @param clauses takes clauses from query object
- *
  * @returns `GotReqParams[]` which are directly passed
  */
 export const queryClauseTransformer = (

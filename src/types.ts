@@ -10,6 +10,7 @@ export interface Query {
   domain: string
   /** clauses to run w/ the query */
   clauses: Array<Clause> | []
+  // TODO: refactor into enum
   /** rest path associated with api and domain */
   apiPath: 'resource' | 'api/views' | 'api/catalog/v1'
 }

@@ -26,6 +26,7 @@ export const createQuery = (
   const domain =
     queryOpts?.domain ?? 'data.cityofnewyork.us'
   const apiPath = queryOpts?.apiPath ?? 'resource'
+
   return {
     src,
     domain,
