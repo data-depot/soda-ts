@@ -5,11 +5,11 @@ import { Query, Clause } from './types'
  * fn to generate clauses
  *
  * @param clauseName name of the clause the generated fn to be assciated w/
- * @returns clause fn
+ * @returns clause curry fn which takes value and can be call with a query
  */
 export const createClause = (
   clauseName: Clause['name']
-) => (query: Query, value: string): Query => ({
+) => (value: string) => (query: Query) => ({
   ...query,
   clauses: [...query.clauses, { name: clauseName, value }]
 })
@@ -17,20 +17,33 @@ export const createClause = (
 /**
  * fn to attach `$where` clause to query
  *
- * @param query
  * @param value to select with
+ * @returns fn that can can consume and generate a new query
  */
 export const where = createClause('$where')
 
 /**
  * fn to attach `$select` clause to query
  *
- * @param query
  * @param value to filter with
+ * @returns fn that can can consume and generate a new query
  */
 export const select = createClause('$select')
 
+/**
+ * fn to attach `$limit` clause to query for pagination
+ *
+ * @param value number of items to be returned
+ * @returns fn that can can consume and generate a new query
+ */
 export const limit = createClause('$limit')
+
+/**
+ * fn to attach `$offset` clause to query for pagination
+ *
+ * @param value to offset by
+ * @returns fn that can can consume and generate a new query
+ */
 export const offset = createClause('$offset')
 
 type URLReqParams = [Clause['name'], Clause['value']]

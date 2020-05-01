@@ -17,7 +17,7 @@ describe('clauses', () => {
   })
 
   it('createClause attaches to query', async () => {
-    const clause = createClause(CLAUSE)(query, 'test')
+    const clause = createClause(CLAUSE)('test')(query)
     expect(clause.clauses).toHaveLength(1)
     expect(clause.clauses[0]).toMatchObject({
       name: expect.stringMatching(CLAUSE)
