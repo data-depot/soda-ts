@@ -9,7 +9,7 @@ import { Query, Clause } from './types'
  */
 export const createClause = (
   clauseName: Clause['name']
-) => (value: string) => (query: Query) => ({
+) => (value: string) => (query: Query): Query => ({
   ...query,
   clauses: [...query.clauses, { name: clauseName, value }]
 })
