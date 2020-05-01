@@ -88,6 +88,23 @@ describe('createRunner', () => {
       await expect(res).resolves.toBeTruthy()
     })
 
+    it('eq operator ', async () => {
+      expect(authOpts.appToken).not.toBeUndefined()
+
+      const query = createQuery('w7w3-xahh', {
+        domain: 'data.cityofnewyork.us'
+      })
+
+      const testRunner = createRunner<RawData[]>()
+
+      const res = pipe(
+        where`license_nbr = '1232665-DCA'`,
+        testRunner
+      )(query)
+
+      await expect(res).resolves.toBeTruthy()
+    })
+
     it('between operator ', async () => {
       const authOpts = {
         appToken: process.env.APP_TOKEN
@@ -105,9 +122,7 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>(authOpts)
 
       const res = pipe(
-        where(
-          `license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`
-        ),
+        where`license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`,
         testRunner
       )(query)
       await expect(res).resolves.toBeTruthy()

@@ -18,7 +18,8 @@
     "test:coverage": "tsdx test --coverage",
     "lint": "tsdx lint src test",
     "lint:fix": "yarn lint --fix",
-    "prepare": "tsdx build"
+    "prepare": "tsdx build",
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {},
   "commitlint": {
@@ -28,7 +29,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
+      "pre-commit": "lint-staged && yarn typecheck",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -53,6 +54,7 @@
     "@types/debug": "^4.1.5",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
+    "@types/ramda": "^0.27.4",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "commitizen": "^4.0.4",
@@ -76,7 +78,6 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@types/ramda": "^0.27.4",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "got": "^11.0.2",
