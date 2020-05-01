@@ -60,6 +60,15 @@ describe('clauses', () => {
     })
   })
 
+  it('handle numberical values', () => {
+    const clause = createClause('test')(0)(query)
+    expect(clause.clauses).toHaveLength(1)
+    expect(clause.clauses[0]).toMatchObject({
+      name: expect.stringMatching(CLAUSE),
+      value: 0
+    })
+  })
+
   it('template literals w/ vars take our returns', () => {
     const TEST = 'test'
     const clause = createClause('test')`
@@ -77,7 +86,7 @@ describe('clauses', () => {
     })
   })
 
-  it('clause transforms', async () => {
+  it('clause transforms', () => {
     const transformedClause = clauseTransformer({
       name: '$where',
       value: 'test'
@@ -88,7 +97,7 @@ describe('clauses', () => {
     expect(transformedClause[1]).toBe('test')
   })
 
-  it('adds clauses to query', async () => {
+  it('adds clauses to query', () => {
     const clauses: Clause[] = [
       { name: '$where', value: 'test' },
       { name: '$select', value: 'test1' },
