@@ -27,7 +27,16 @@ export const createRunner = <T>(
 
   // TODO: cleanup param generation into a fn
   const clauseParams = queryClauseTransformer(query.clauses)
+  logger(
+    `making req with clauses: ${JSON.stringify(
+      clauseParams
+    )}`
+  )
+
   const searchParams = new URLSearchParams(clauseParams)
+  logger(
+    `making req with params: ${searchParams.toString()}`
+  )
 
   const headers = {
     ...(authOpts?.appToken && {
