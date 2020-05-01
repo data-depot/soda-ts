@@ -1,4 +1,30 @@
-import { createRunner, createQuery, Query } from '../src'
+import {
+  createRunner,
+  createQuery,
+  Query,
+  where,
+  limit,
+  offset
+} from '../src'
+import { pipe } from 'ramda'
+
+/* eslint-disable */
+const rawData = {
+  license_nbr: '1232665-DCA',
+  license_type: 'Individual',
+  lic_expir_dd: '2021-02-28T00:00:00.000',
+  license_status: 'Active',
+  license_creation_date: '2006-07-10T00:00:00.000',
+  industry: 'Home Improvement Salesperson',
+  business_name: 'CATALFUMO, DANIEL J',
+  address_city: 'LITTLE EGG HARBOR TWP',
+  address_state: 'NJ',
+  address_zip: '08087',
+  contact_phone: '6465339803'
+}
+/* eslint-enable  */
+
+type RawData = typeof rawData
 
 describe('createRunner', () => {
   let query: Query
@@ -26,6 +52,91 @@ describe('createRunner', () => {
     expect(authOpts.appToken).not.toBeUndefined()
     const res = await authenticatedRunner(query)
     expect(res.length).toBeGreaterThan(1)
+  })
+
+  describe('$where', () => {
+    it('gt operator ', async () => {
+      expect(authOpts.appToken).not.toBeUndefined()
+
+      const query = createQuery('4tka-6guv', {
+        domain: 'soda.demo.socrata.com'
+      })
+
+      const testRunner = createRunner<RawData[]>()
+
+      const res = pipe(
+        (query: Query) => where(query, 'magnitude > 3.0'),
+        testRunner
+      )(query)
+
+      await expect(res).resolves.toBeTruthy()
+    })
+
+    it('like operator ', async () => {
+      expect(authOpts.appToken).not.toBeUndefined()
+
+      const query = createQuery('w7w3-xahh', {
+        domain: 'data.cityofnewyork.us'
+      })
+
+      const testRunner = createRunner<RawData[]>()
+
+      const res = pipe(
+        (query: Query) =>
+          where(query, "license_nbr like '1232665-DCA'"),
+        testRunner
+      )(query)
+
+      await expect(res).resolves.toBeTruthy()
+    })
+
+    it('between operator ', async () => {
+      const authOpts = {
+        appToken: process.env.APP_TOKEN
+      }
+
+      const dateToday = new Date()
+        .toISOString()
+        .slice(0, 19)
+      expect(authOpts.appToken).not.toBeUndefined()
+
+      const query = createQuery('w7w3-xahh', {
+        domain: 'data.cityofnewyork.us'
+      })
+
+      const testRunner = createRunner<RawData[]>(authOpts)
+
+      const res = pipe(
+        (query: Query) =>
+          where(
+            query,
+            `license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`
+          ),
+        testRunner
+      )(query)
+      // console.log(await res)
+      await expect(res).resolves.toBeTruthy()
+    })
+
+    it('pagination operator ', async () => {
+      const authOpts = {
+        appToken: process.env.APP_TOKEN
+      }
+
+      const query = createQuery('w7w3-xahh', {
+        domain: 'data.cityofnewyork.us'
+      })
+
+      const testRunner = createRunner<RawData[]>(authOpts)
+
+      const res = pipe(
+        (query: Query) => limit(query, '5'),
+        (query: Query) => offset(query, '0'),
+        testRunner
+      )(query)
+
+      await expect(res).resolves.toBeTruthy()
+    })
   })
 
   it('runner fails when invalid token provided', async () => {

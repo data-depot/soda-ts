@@ -30,6 +30,9 @@ export const where = createClause('$where')
  */
 export const select = createClause('$select')
 
+export const limit = createClause('$limit')
+export const offset = createClause('$offset')
+
 type URLReqParams = [Clause['name'], Clause['value']]
 
 /**
