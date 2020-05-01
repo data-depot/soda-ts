@@ -2,7 +2,9 @@ import {
   createRunner,
   createQuery,
   Query,
-  where
+  where,
+  limit,
+  offset
 } from '../src'
 import { pipe } from 'ramda'
 
@@ -113,6 +115,26 @@ describe('createRunner', () => {
         testRunner
       )(query)
       // console.log(await res)
+      await expect(res).resolves.toBeTruthy()
+    })
+
+    it('pagination operator ', async () => {
+      const authOpts = {
+        appToken: process.env.APP_TOKEN
+      }
+
+      const query = createQuery('w7w3-xahh', {
+        domain: 'data.cityofnewyork.us'
+      })
+
+      const testRunner = createRunner<RawData[]>(authOpts)
+
+      const res = pipe(
+        (query: Query) => limit(query, '5'),
+        (query: Query) => offset(query, '0'),
+        testRunner
+      )(query)
+
       await expect(res).resolves.toBeTruthy()
     })
   })
