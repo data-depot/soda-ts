@@ -21,6 +21,25 @@ export const templateToString = (
 }
 
 /**
+ * take clause inputs and serialize them into strings
+ *
+ * @param value raw value
+ * @param extras args passed into the template
+ */
+export const clauseValueSerializer = (
+  value: string | TemplateStringsArray | number,
+  extras?: Array<string>
+): Clause['value'] => {
+  if (typeof value === 'string') {
+    return value
+  } else if (typeof value === 'number') {
+    return value.toString()
+  } else {
+    return templateToString(value, extras)
+  }
+}
+
+/**
  * fn to generate clauses
  *
  * @param clauseName name of the clause the generated fn to be assciated w/
@@ -37,11 +56,7 @@ export const createClause = (
     ...query.clauses,
     {
       name: clauseName,
-      value:
-        typeof value === 'string' ||
-        typeof value === 'number'
-          ? value
-          : templateToString(value, _args)
+      value: clauseValueSerializer(value, _args)
     }
   ]
 })

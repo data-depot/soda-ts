@@ -5,7 +5,8 @@ import {
   clauseTransformer,
   queryClauseTransformer,
   Clause,
-  templateToString
+  templateToString,
+  clauseValueSerializer
 } from '../src'
 
 const CLAUSE = 'test'
@@ -17,11 +18,73 @@ describe('clauses', () => {
     query = createQuery('w7w3-xahh')
   })
 
-  it('createClause attaches to query', async () => {
+  it('createClause attaches to query', () => {
     const clause = createClause(CLAUSE)('test')(query)
     expect(clause.clauses).toHaveLength(1)
     expect(clause.clauses[0]).toMatchObject({
       name: expect.stringMatching(CLAUSE)
+    })
+  })
+
+  describe('input values', () => {
+    it('template literals can handle returns', () => {
+      const str = templateToString`
+      hello
+      world
+      `
+
+      expect(str).toBe('hello world')
+    })
+
+    it('template literals take our returns', () => {
+      const clause = createClause('test')`
+      test
+      is
+      why
+      name
+      `(query)
+
+      expect(clause.clauses).toHaveLength(1)
+      expect(clause.clauses[0]).toMatchObject({
+        name: expect.stringMatching(CLAUSE),
+        value: expect.stringMatching('test is why name')
+      })
+    })
+
+    it('handle numberical values', () => {
+      const clause = createClause('test')(0)(query)
+      expect(clause.clauses).toHaveLength(1)
+      expect(clause.clauses[0]).toMatchObject({
+        name: expect.stringMatching(CLAUSE),
+        value: expect.stringMatching('0')
+      })
+    })
+
+    it('template literals w/ vars take our returns', () => {
+      const TEST = 'test'
+      const clause = createClause('test')`
+      test
+      is
+      why
+      name
+      ${TEST}
+      `(query)
+
+      expect(clause.clauses).toHaveLength(1)
+      expect(clause.clauses[0]).toMatchObject({
+        name: expect.stringMatching(CLAUSE),
+        value: expect.stringMatching(
+          'test is why name test'
+        )
+      })
+    })
+
+    describe('serializer', () => {
+      it('handle string value', () => {
+        expect(clauseValueSerializer('some string')).toBe(
+          'some string'
+        )
+      })
     })
   })
 
@@ -33,56 +96,6 @@ describe('clauses', () => {
     expect(clause.clauses[0]).toMatchObject({
       name: expect.stringMatching(CLAUSE),
       value: expect.stringMatching('test is why name')
-    })
-  })
-
-  it('template literals can handle returns', () => {
-    const str = templateToString`
-    hello
-    world
-    `
-
-    expect(str).toBe('hello world')
-  })
-
-  it('template literals take our returns', () => {
-    const clause = createClause('test')`
-    test
-    is
-    why
-    name
-    `(query)
-
-    expect(clause.clauses).toHaveLength(1)
-    expect(clause.clauses[0]).toMatchObject({
-      name: expect.stringMatching(CLAUSE),
-      value: expect.stringMatching('test is why name')
-    })
-  })
-
-  it('handle numberical values', () => {
-    const clause = createClause('test')(0)(query)
-    expect(clause.clauses).toHaveLength(1)
-    expect(clause.clauses[0]).toMatchObject({
-      name: expect.stringMatching(CLAUSE),
-      value: 0
-    })
-  })
-
-  it('template literals w/ vars take our returns', () => {
-    const TEST = 'test'
-    const clause = createClause('test')`
-    test
-    is
-    why
-    name
-    ${TEST}
-    `(query)
-
-    expect(clause.clauses).toHaveLength(1)
-    expect(clause.clauses[0]).toMatchObject({
-      name: expect.stringMatching(CLAUSE),
-      value: expect.stringMatching('test is why name test')
     })
   })
 

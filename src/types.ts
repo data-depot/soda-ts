@@ -5,7 +5,7 @@ export interface Clause {
   /** name of the clause */
   name: string
   /** value of the clause */
-  value: string | number
+  value: string
 }
 
 /**
