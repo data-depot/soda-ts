@@ -34,8 +34,8 @@ interface AuthObj {
  * const runner = createRunner()
  *
  * await pipe(
- *  select("city like 'NYC'")
- *  where('magnitude > 3.0')
+ *  select`city like 'NYC'`
+ *  where`magnitude > 3.0`
  *  runner
  * )(query)
  */
@@ -71,7 +71,13 @@ export const createRunner = <T>(
 
   try {
     const res = await got
-      .get(url, { headers, searchParams })
+      .get(url, {
+        headers,
+        searchParams
+        // hooks: {
+        //   beforeRequest: [(options) => logger(options)]
+        // }
+      })
       .json<T>()
     return res
   } catch (e) {
