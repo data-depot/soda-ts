@@ -24,6 +24,17 @@ describe('clauses', () => {
     })
   })
 
+  it('use template literals for clauses', () => {
+    const clause = createClause('test')`test is why name`(
+      query
+    )
+    expect(clause.clauses).toHaveLength(1)
+    expect(clause.clauses[0]).toMatchObject({
+      name: expect.stringMatching(CLAUSE),
+      value: expect.stringMatching('test is why name')
+    })
+  })
+
   it('clause transforms', async () => {
     const transformedClause = clauseTransformer({
       name: '$where',
