@@ -33,7 +33,7 @@ const rawData = {
   address_state: 'NY',
   address_zip: '11432'
 }
-/* eslint-enable  */
+/* eslint-enable */
 
 type RawData = typeof rawData
 
