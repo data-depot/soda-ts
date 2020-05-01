@@ -15,8 +15,29 @@ interface AuthObj {
 }
 
 /**
+ * create runner functions which uses `Query` to get data
  *
  * @param authOpts optional auth options to make authenticated req
+ * @returns runner fn
+ *
+ * ### Usage
+ *
+ * Runners are the main and only fn with side effects in `soda-ts`. Their job is to consume
+ * `Query` and return a promise, which once resolved will give us the data or throw an error
+ *
+ * It's best to have one runner for each kind of query as they can be used for pagination and validation
+ * in the future
+ *
+ * @example
+ * const query = createQuery('data-set-id')
+ * // generates unauthenticated runner
+ * const runner = createRunner()
+ *
+ * await pipe(
+ *  select("city like 'NYC'")
+ *  where('magnitude > 3.0')
+ *  runner
+ * )(query)
  */
 export const createRunner = <T>(
   authOpts?: AuthObj
