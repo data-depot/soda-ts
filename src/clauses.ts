@@ -1,6 +1,14 @@
 // local
 import { Query, Clause } from './types'
 
+/**
+ * convert clause qeuries template string into raw string.
+ * used internally by createClause to hadnle tempalate string
+ * clause values
+ *
+ * @param values raw string array from templates
+ * @param extras args passed into the template
+ */
 export const templateToString = (
   values: TemplateStringsArray,
   extras?: Array<string>
@@ -16,12 +24,12 @@ export const templateToString = (
  * fn to generate clauses
  *
  * @param clauseName name of the clause the generated fn to be assciated w/
- * @returns clause curry fn which takes value and can be call with a query
+ * @returns clause curry fn which takes value and can be called with a query
  */
 export const createClause = (
   clauseName: Clause['name']
 ) => (
-  value: string | TemplateStringsArray,
+  value: string | TemplateStringsArray | number,
   ..._args: string[]
 ) => (query: Query): Query => ({
   ...query,
@@ -30,7 +38,8 @@ export const createClause = (
     {
       name: clauseName,
       value:
-        typeof value === 'string'
+        typeof value === 'string' ||
+        typeof value === 'number'
           ? value
           : templateToString(value, _args)
     }
@@ -42,6 +51,15 @@ export const createClause = (
  *
  * @param value to select with
  * @returns fn that can can consume and generate a new query
+ *
+ * **Usage**
+ * @example
+ * const whereCurrFn = where`magnitude > 3.0`
+ *
+ * pipe(
+ *  whereCurrFn
+ *  runner
+ * )(query)
  */
 export const where = createClause('$where')
 
