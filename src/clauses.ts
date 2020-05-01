@@ -9,9 +9,24 @@ import { Query, Clause } from './types'
  */
 export const createClause = (
   clauseName: Clause['name']
-) => (value: string) => (query: Query): Query => ({
+) => (
+  value: string | TemplateStringsArray,
+  ..._args: string[]
+) => (query: Query): Query => ({
   ...query,
-  clauses: [...query.clauses, { name: clauseName, value }]
+  clauses: [
+    ...query.clauses,
+    {
+      name: clauseName,
+      value:
+        typeof value === 'string'
+          ? value
+          : value
+              .map((str, i) => `${str}${_args[i] ?? ''}`)
+              .join('')
+              .trim()
+    }
+  ]
 })
 
 /**

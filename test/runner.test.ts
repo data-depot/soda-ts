@@ -105,9 +105,7 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>(authOpts)
 
       const res = pipe(
-        where(
-          `license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`
-        ),
+        where`license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`,
         testRunner
       )(query)
       await expect(res).resolves.toBeTruthy()
