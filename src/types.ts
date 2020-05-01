@@ -23,3 +23,8 @@ export interface Query {
   /** rest path associated with api and domain */
   apiPath: 'resource' | 'api/views' | 'api/catalog/v1'
 }
+
+export interface AuthOpts {
+  // apiToken?: string
+  appToken?: string
+}
