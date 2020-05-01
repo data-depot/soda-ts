@@ -1,4 +1,5 @@
 export * from './clauses'
-export * from './createRunner'
+export * from './runner'
 export * from './query'
 export * from './types'
+export { pipe } from 'ramda'

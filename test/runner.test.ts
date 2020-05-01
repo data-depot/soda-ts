@@ -43,15 +43,14 @@ describe('createRunner', () => {
   })
 
   it('successfully grabs ', async () => {
-    const res = await runner(query)
-
-    expect(res.length).toBeGreaterThan(1)
+    await expect(runner(query)).resolves.toBeTruthy()
   })
 
   it('successfully grabs with authentication ', async () => {
     expect(authOpts.appToken).not.toBeUndefined()
-    const res = await authenticatedRunner(query)
-    expect(res.length).toBeGreaterThan(1)
+    await expect(
+      authenticatedRunner(query)
+    ).resolves.toBeTruthy()
   })
 
   describe('$where', () => {
@@ -65,7 +64,7 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>()
 
       const res = pipe(
-        (query: Query) => where(query, 'magnitude > 3.0'),
+        where('magnitude > 3.0'),
         testRunner
       )(query)
 
@@ -82,8 +81,7 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>()
 
       const res = pipe(
-        (query: Query) =>
-          where(query, "license_nbr like '1232665-DCA'"),
+        where("license_nbr like '1232665-DCA'"),
         testRunner
       )(query)
 
@@ -107,14 +105,11 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>(authOpts)
 
       const res = pipe(
-        (query: Query) =>
-          where(
-            query,
-            `license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`
-          ),
+        where(
+          `license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`
+        ),
         testRunner
       )(query)
-      // console.log(await res)
       await expect(res).resolves.toBeTruthy()
     })
 
@@ -130,8 +125,8 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>(authOpts)
 
       const res = pipe(
-        (query: Query) => limit(query, '5'),
-        (query: Query) => offset(query, '0'),
+        limit('5'),
+        offset('0'),
         testRunner
       )(query)
 
