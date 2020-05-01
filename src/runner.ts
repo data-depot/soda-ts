@@ -20,7 +20,7 @@ interface AuthObj {
  */
 export const createRunner = <T>(
   authOpts?: AuthObj
-) => async (query: Query): Promise<Array<T>> => {
+) => async (query: Query): Promise<T> => {
   const url = `https://${query.domain}/${query.apiPath}/${query.src}.json`
 
   logger(`making req to url: ${url}`)
@@ -51,7 +51,7 @@ export const createRunner = <T>(
   try {
     const res = await got
       .get(url, { headers, searchParams })
-      .json<T[]>()
+      .json<T>()
     return res
   } catch (e) {
     throw new Error(e.message)
