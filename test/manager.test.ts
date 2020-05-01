@@ -37,55 +37,57 @@ const rawData = {
 
 type RawData = typeof rawData
 
-describe('updates query clauses', () => {
-  let query: Query
-
-  beforeEach(() => {
-    query = createQuery('w7w3-xahh')
-  })
-
-  it('updates query clauses', async () => {
-    const newQuery = updateQueryPaginator(
-      query,
-      paginationOpts
-    )
-
-    expect(
-      newQuery.clauses[newQuery.clauses.length - 1].value
-    ).toBe('0')
-  })
-})
-
 describe('manager', () => {
-  let query: Query
+  describe('updates query clauses', () => {
+    let query: Query
 
-  // let authenticatedRunner: ReturnType<typeof createRunner>
+    beforeEach(() => {
+      query = createQuery('w7w3-xahh')
+    })
 
-  beforeEach(() => {
-    query = createQuery('w7w3-xahh')
+    it('updates query clauses', async () => {
+      const newQuery = updateQueryPaginator(
+        query,
+        paginationOpts
+      )
+
+      expect(
+        newQuery.clauses[newQuery.clauses.length - 1].value
+      ).toBe('0')
+    })
   })
 
-  it('run', async () => {
-    const manager = createManager(managerOpts)(query)
-    const paginationQuery = await manager.run()
-    // console.log(paginationQuery)
-    expect(paginationQuery).toBeTruthy()
-  })
+  describe('createManager', () => {
+    let query: Query
 
-  it('paginate', async () => {
-    const manager = createManager(managerOpts)(query)
-    manager.paginate()
-    expect(manager.offset).toBe(5)
-  })
+    // let authenticatedRunner: ReturnType<typeof createRunner>
 
-  it('paginates and fetches data', async () => {
-    const manager = createManager<RawData[]>(managerOpts)(
-      query
-    )
-    manager.paginate()
-    const res = await manager.run()
-    expect(manager.limit).toBe(5)
-    expect(manager.offset).toBe(5)
-    expect(res.length).toBe(manager.limit)
+    beforeEach(() => {
+      query = createQuery('w7w3-xahh')
+    })
+
+    it('run', async () => {
+      const manager = createManager(managerOpts)(query)
+      const paginationQuery = await manager.run()
+      // console.log(paginationQuery)
+      expect(paginationQuery).toBeTruthy()
+    })
+
+    it('paginate', async () => {
+      const manager = createManager(managerOpts)(query)
+      manager.paginate()
+      expect(manager.offset).toBe(5)
+    })
+
+    it('paginates and fetches data', async () => {
+      const manager = createManager<RawData[]>(managerOpts)(
+        query
+      )
+      manager.paginate()
+      const res = await manager.run()
+      expect(manager.limit).toBe(5)
+      expect(manager.offset).toBe(5)
+      expect(res.length).toBe(manager.limit)
+    })
   })
 })
