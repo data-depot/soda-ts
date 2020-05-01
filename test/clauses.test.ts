@@ -4,7 +4,8 @@ import {
   Query,
   clauseTransformer,
   queryClauseTransformer,
-  Clause
+  Clause,
+  templateToString
 } from '../src'
 
 const CLAUSE = 'test'
@@ -32,6 +33,47 @@ describe('clauses', () => {
     expect(clause.clauses[0]).toMatchObject({
       name: expect.stringMatching(CLAUSE),
       value: expect.stringMatching('test is why name')
+    })
+  })
+
+  it('template literals can handle returns', () => {
+    const str = templateToString`
+    hello
+    world
+    `
+
+    expect(str).toBe('hello world')
+  })
+
+  it('template literals take our returns', () => {
+    const clause = createClause('test')`
+    test
+    is
+    why
+    name
+    `(query)
+
+    expect(clause.clauses).toHaveLength(1)
+    expect(clause.clauses[0]).toMatchObject({
+      name: expect.stringMatching(CLAUSE),
+      value: expect.stringMatching('test is why name')
+    })
+  })
+
+  it('template literals w/ vars take our returns', () => {
+    const TEST = 'test'
+    const clause = createClause('test')`
+    test
+    is
+    why
+    name
+    ${TEST}
+    `(query)
+
+    expect(clause.clauses).toHaveLength(1)
+    expect(clause.clauses[0]).toMatchObject({
+      name: expect.stringMatching(CLAUSE),
+      value: expect.stringMatching('test is why name test')
     })
   })
 

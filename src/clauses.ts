@@ -1,6 +1,17 @@
 // local
 import { Query, Clause } from './types'
 
+export const templateToString = (
+  values: TemplateStringsArray,
+  extras?: Array<string>
+): string => {
+  return values
+    .map((str, i) => `${str}${extras?.[i] ?? ''}`)
+    .join('')
+    .replace(/\s\s+/g, ' ')
+    .trim()
+}
+
 /**
  * fn to generate clauses
  *
@@ -21,10 +32,7 @@ export const createClause = (
       value:
         typeof value === 'string'
           ? value
-          : value
-              .map((str, i) => `${str}${_args[i] ?? ''}`)
-              .join('')
-              .trim()
+          : templateToString(value, _args)
     }
   ]
 })
