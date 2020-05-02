@@ -81,7 +81,8 @@
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "got": "^11.0.2",
-    "ramda": "^0.27.0"
+    "ramda": "^0.27.0",
+    "rxjs": "^6.5.5"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"

@@ -1,8 +1,12 @@
+// pkgs
 import { pipe } from 'ramda'
+import debug from 'debug'
+import { Observable } from 'rxjs'
+
+// local
 import { AuthOpts, Query } from './types'
 import { limit, offset } from './clauses'
 import { createRunner } from './runner'
-import debug from 'debug'
 
 const logger = debug('soda-ts:manager')
 
@@ -50,6 +54,7 @@ export const createManager = <T>(opts: ManagerOpts) => (
   )(query)
 
   const runner = createRunner<T>(opts.authOpts)
+  let paginationObserver: Observable<T> | null = null
 
   const run = (): Promise<T> => {
     return runner(paginatedQuery)
@@ -69,14 +74,24 @@ export const createManager = <T>(opts: ManagerOpts) => (
     )
   }
 
+  const autoPaginator = (): void => {
+    paginationObserver = new Observable<T>((subscriber) => {
+      logger('test', subscriber)
+    })
+  }
+
   return {
     run,
     paginate,
+    autoPaginator,
     get limit() {
       return paginationOpts.limit
     },
     get offset() {
       return paginationOpts.offset
+    },
+    get paginationObservable() {
+      return paginationObserver
     }
   }
 }
