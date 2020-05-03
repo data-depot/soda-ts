@@ -1,8 +1,17 @@
+/**
+ * clauses to be attachec to queries
+ */
 export interface Clause {
+  /** name of the clause */
   name: string
+  /** value of the clause */
   value: string
 }
 
+/**
+ * all query requests are defined as a `Query`. They are
+ * consumed by a runner or manager to make SODA SoQL requests
+ */
 export interface Query {
   /** data source identifier */
   src: string
@@ -15,11 +24,7 @@ export interface Query {
   apiPath: 'resource' | 'api/views' | 'api/catalog/v1'
 }
 
-export interface Authorization {
-  type: 'TOKEN' | 'USERNAME_PASS'
-  username?: string
-  password?: string
-  token?: string
-  domain: string
-  timeout: number
+export interface AuthOpts {
+  // apiToken?: string
+  appToken?: string
 }

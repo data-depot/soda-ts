@@ -8,23 +8,7 @@ import {
 } from '../src'
 import { pipe } from 'ramda'
 
-/* eslint-disable */
-const rawData = {
-  license_nbr: '1232665-DCA',
-  license_type: 'Individual',
-  lic_expir_dd: '2021-02-28T00:00:00.000',
-  license_status: 'Active',
-  license_creation_date: '2006-07-10T00:00:00.000',
-  industry: 'Home Improvement Salesperson',
-  business_name: 'CATALFUMO, DANIEL J',
-  address_city: 'LITTLE EGG HARBOR TWP',
-  address_state: 'NJ',
-  address_zip: '08087',
-  contact_phone: '6465339803'
-}
-/* eslint-enable  */
-
-type RawData = typeof rawData
+import { RAW_DATA, RawData } from './fixtures'
 
 describe('createRunner', () => {
   let query: Query
@@ -88,6 +72,23 @@ describe('createRunner', () => {
       await expect(res).resolves.toBeTruthy()
     })
 
+    it('eq operator ', async () => {
+      expect(authOpts.appToken).not.toBeUndefined()
+
+      const query = createQuery('w7w3-xahh', {
+        domain: 'data.cityofnewyork.us'
+      })
+
+      const testRunner = createRunner<RawData[]>()
+
+      const res = pipe(
+        where`license_nbr = '1232665-DCA'`,
+        testRunner
+      )(query)
+
+      await expect(res).resolves.toBeTruthy()
+    })
+
     it('between operator ', async () => {
       const authOpts = {
         appToken: process.env.APP_TOKEN
@@ -105,9 +106,7 @@ describe('createRunner', () => {
       const testRunner = createRunner<RawData[]>(authOpts)
 
       const res = pipe(
-        where(
-          `license_creation_date between "${rawData.license_creation_date}" and "${dateToday}"`
-        ),
+        where`license_creation_date between "${RAW_DATA.license_creation_date}" and "${dateToday}"`,
         testRunner
       )(query)
       await expect(res).resolves.toBeTruthy()
