@@ -4,16 +4,10 @@ import got from 'got'
 import debug from 'debug'
 
 // local
-import { Query } from './types'
+import { Query, AuthOpts } from './types'
 import { queryClauseTransformer } from './clauses'
 
 const logger = debug('soda-ts:runner')
-
-interface AuthObj {
-  // apiToken?: string
-  appToken?: string
-}
-
 /**
  * create runner functions which uses `Query` to get data
  *
@@ -40,13 +34,14 @@ interface AuthObj {
  * )(query)
  */
 export const createRunner = <T>(
-  authOpts?: AuthObj
+  authOpts?: AuthOpts
 ) => async (query: Query): Promise<T> => {
   const url = `https://${query.domain}/${query.apiPath}/${query.src}.json`
 
   logger(`making req to url: ${url}`)
 
-  // TODO: cleanup param generation into a fn
+  // TODO: refactor: cleanup param generation into a fn
+  // use pure fn to generate the search params
   const clauseParams = queryClauseTransformer(query.clauses)
   logger(
     `making req with clauses: ${JSON.stringify(
