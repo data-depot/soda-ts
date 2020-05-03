@@ -1,7 +1,7 @@
 // pkgs
 import { pipe } from 'ramda'
 import debug from 'debug'
-import { Observable } from 'rxjs'
+import { Subject } from 'rxjs'
 
 // local
 import { AuthOpts, Query } from './types'
@@ -38,9 +38,16 @@ export const updateQueryPaginator = (
   return offset(paginationOpts.offset)(newQuery)
 }
 
+export interface Manager<T> {
+  run: () => Promise<T[]>
+  paginate: () => void
+  readonly limit: number
+  readonly offset: number
+}
+
 export const createManager = <T>(opts: ManagerOpts) => (
   query: Query
-) => {
+): Manager<T> => {
   const paginationOpts: PaginationOpts = {
     limit: opts.limit,
     pageSize: opts.limit,
@@ -53,10 +60,9 @@ export const createManager = <T>(opts: ManagerOpts) => (
     offset(paginationOpts.offset)
   )(query)
 
-  const runner = createRunner<T>(opts.authOpts)
-  let paginationObserver: Observable<T> | null = null
+  const runner = createRunner<T[]>(opts.authOpts)
 
-  const run = (): Promise<T> => {
+  const run = (): Promise<T[]> => {
     return runner(paginatedQuery)
   }
 
@@ -74,24 +80,26 @@ export const createManager = <T>(opts: ManagerOpts) => (
     )
   }
 
-  const autoPaginator = (): void => {
-    paginationObserver = new Observable<T>((subscriber) => {
-      logger('test', subscriber)
-    })
-  }
-
   return {
     run,
     paginate,
-    autoPaginator,
     get limit() {
       return paginationOpts.limit
     },
     get offset() {
       return paginationOpts.offset
-    },
-    get paginationObservable() {
-      return paginationObserver
     }
   }
+}
+
+export const autoPaginator = async <T>(
+  manager: Manager<T>,
+  subject: Subject<T[]>
+): Promise<void> => {
+  let currentPageSize = 0
+  do {
+    const res = await manager.run()
+    currentPageSize = res.length
+    subject.next(res)
+  } while (currentPageSize === manager.limit)
 }

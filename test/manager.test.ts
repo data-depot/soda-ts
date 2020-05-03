@@ -2,8 +2,10 @@ import {
   updateQueryPaginator,
   createQuery,
   Query,
-  createManager
+  createManager,
+  autoPaginator
 } from '../src'
+import { Subject } from 'rxjs'
 
 const paginationOpts = {
   limit: 5,
@@ -88,6 +90,26 @@ describe('manager', () => {
       expect(manager.limit).toBe(5)
       expect(manager.offset).toBe(5)
       expect(res.length).toBe(manager.limit)
+    })
+  })
+
+  describe('autoPaginator', () => {
+    // eslint-disable-next-line jest/no-test-callback
+    it('auto pagination', async (done) => {
+      const paginatorSubject = new Subject<RawData[]>()
+      const query = createQuery('w7w3-xahh')
+
+      paginatorSubject.subscribe((val) => {
+        expect(val).toBeTruthy()
+        expect(val).toHaveLength(5)
+        done()
+      })
+
+      const manager = createManager<RawData>(managerOpts)(
+        query
+      )
+
+      await autoPaginator(manager, paginatorSubject)
     })
   })
 })
