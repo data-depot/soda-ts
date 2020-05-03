@@ -92,12 +92,14 @@ export const createManager = <T>(opts: ManagerOpts) => (
   }
 }
 
+// TODO: fix generic type mismatch
 export const autoPaginator = async <T>(
   manager: Manager<T>,
   subject: Subject<T[]>
 ): Promise<void> => {
   let currentPageSize = 0
   do {
+    manager.paginate()
     const res = await manager.run()
     currentPageSize = res.length
     subject.next(res)
