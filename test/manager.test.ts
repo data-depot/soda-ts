@@ -116,27 +116,20 @@ describe('manager', () => {
     })
 
     // eslint-disable-next-line jest/no-test-callback
-    it('auto pagination returns new data over time', async (done) => {
-      let currReq = 0
-      let oldData: RawData[]
-      let currData: RawData[]
+    it('auto pagination failure sends out error', async (done) => {
+      const newQuery = createQuery('')
+      const newManager = createManagerCreator<RawData>(
+        MANAGER_OPTS
+      )(newQuery)
 
-      paginatorSubject.subscribe((val) => {
-        if (currData) {
-          oldData = currData
-        }
-        currData = val
-        expect(val).toBeTruthy()
-        expect(val).toHaveLength(5)
-        currReq++
-        if (currReq === 2) {
-          expect(currReq).toBe(2)
-          expect(oldData).not.toStrictEqual(currData)
+      paginatorSubject.subscribe({
+        error: (e) => {
+          expect(e).toBeTruthy()
           done()
         }
       })
 
-      await autoPaginator(manager, paginatorSubject)
+      await autoPaginator(newManager, paginatorSubject)
     })
   })
 })
