@@ -40,7 +40,8 @@ export const createRunner = <T>(
 
   logger(`making req to url: ${url}`)
 
-  // TODO: cleanup param generation into a fn
+  // TODO: refactor: cleanup param generation into a fn
+  // use pure fn to generate the search params
   const clauseParams = queryClauseTransformer(query.clauses)
   logger(
     `making req with clauses: ${JSON.stringify(

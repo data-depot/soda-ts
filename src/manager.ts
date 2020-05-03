@@ -139,9 +139,22 @@ export const autoPaginator = async <T>(
 ): Promise<void> => {
   let currentPageSize = 0
   do {
-    manager.paginate()
-    const res = await manager.run()
-    currentPageSize = res.length
-    subject.next(res)
+    try {
+      manager.paginate()
+      const res = await manager.run()
+      currentPageSize = res.length
+      subject.next(res)
+    } catch (e) {
+      subject.error(e)
+    }
   } while (currentPageSize === manager.limit)
 }
+
+// TODO: feat: add lazy `autoPaginator$`
+// currently we are expsoing an async/await fn to run
+// our paginator. It's not the most elegant. Best approach
+// would be to wrap the promise in a defered observable.
+// this way, one the `autoPaginator$` observable is subscrtibed too,
+// it'll only then trigger the data fetch procedure. This
+// also provides a nice integration point in projects where
+// observables are being used
