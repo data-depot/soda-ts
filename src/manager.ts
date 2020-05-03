@@ -10,12 +10,14 @@ import { createRunner } from './runner'
 
 const logger = debug('soda-ts:manager')
 
+/** options for pagiantion manager creation */
 interface ManagerOpts {
   limit: number
   offset: number
   authOpts?: AuthOpts
 }
 
+/** options for pagination */
 interface PaginationOpts {
   limit: number
   pageSize: number
@@ -23,6 +25,13 @@ interface PaginationOpts {
   currentPage: number
 }
 
+/**
+ * internal fn used in query managers to
+ * update queries for pagination
+ *
+ * @param query
+ * @param paginationOpts
+ */
 export const updateQueryPaginator = (
   query: Query,
   paginationOpts: PaginationOpts
@@ -38,16 +47,30 @@ export const updateQueryPaginator = (
   return offset(paginationOpts.offset)(newQuery)
 }
 
+/** query manager, to be used for easy pagination */
 export interface Manager<T> {
+  /** grab data by initiating runner */
   run: () => Promise<T[]>
+  /**
+   * runs required side effect for runner to grab next
+   * set of data
+   */
   paginate: () => void
+  /** limit value for paginaton used by manager */
   readonly limit: number
+  /** offset value for pagination used by manager  */
   readonly offset: number
 }
 
-export const createManager = <T>(opts: ManagerOpts) => (
-  query: Query
-): Manager<T> => {
+/**
+ * create a manager creator fn
+ *
+ * @param opts manager options to be used to req
+ * @returns manager creator fn
+ */
+export const createManagerCreator = <T>(
+  opts: ManagerOpts
+) => (query: Query): Manager<T> => {
   const paginationOpts: PaginationOpts = {
     limit: opts.limit,
     pageSize: opts.limit,
@@ -92,7 +115,24 @@ export const createManager = <T>(opts: ManagerOpts) => (
   }
 }
 
-// TODO: fix generic type mismatch
+// TODO: fix: generic type mismatch between manager and subject
+// currently all manager takes the type `T` which is then turned into an array
+// on return from the runner. Meanwhile `Subjects` for `autoPagination` has to take `T[]`
+// as it's being passed in by the user. Possible solution is to bring the paginator back into
+// `Manager`. TBD
+
+// TODO: feat: expose option for an end state, if not interested to grab whole data set
+// currently auto paginator will continue to to run until the end of the data. There're
+// cases when that's not desirable. So, we should expose a kill `boolean` expression, which
+// when true, will break out of the loop
+
+/**
+ * automatically paginate through a data set
+ *
+ * @param manager runner manager used to grab and paginate through data
+ * @param subject subject used to publish acquired data
+ *
+ */
 export const autoPaginator = async <T>(
   manager: Manager<T>,
   subject: Subject<T[]>
