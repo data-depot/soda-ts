@@ -184,15 +184,6 @@ describe('manager', () => {
 
     // eslint-disable-next-line jest/no-test-callback
     it('autoPaginator$', (done) => {
-      query = pipe(
-        createQuery,
-        where`license_nbr='1232665-DCA'`
-      )('w7w3-xahh', undefined)
-
-      manager = createManagerCreator<RawData>(MANAGER_OPTS)(
-        query
-      )
-
       let res: RawData[]
 
       paginatorSubject.subscribe({
@@ -206,7 +197,12 @@ describe('manager', () => {
         }
       })
 
-      autoPaginator$(paginatorSubject)(manager).subscribe({
+      pipe(
+        createQuery,
+        where`license_nbr='1232665-DCA'`,
+        createManagerCreator<RawData>(MANAGER_OPTS),
+        autoPaginator$(paginatorSubject)
+      )('w7w3-xahh', undefined).subscribe({
         complete() {
           expect(res).toBeTruthy()
           expect(res.length).toBe(1)
