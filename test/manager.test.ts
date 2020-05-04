@@ -10,7 +10,8 @@ import {
   createManagerCreator,
   autoPaginator,
   Manager,
-  where
+  where,
+  autoPaginator$
 } from '../src'
 import {
   RawData,
@@ -179,6 +180,39 @@ describe('manager', () => {
       })
 
       await autoPaginator(manager, paginatorSubject)
+    })
+
+    // eslint-disable-next-line jest/no-test-callback
+    it('autoPaginator$', (done) => {
+      query = pipe(
+        createQuery,
+        where`license_nbr='1232665-DCA'`
+      )('w7w3-xahh', undefined)
+
+      manager = createManagerCreator<RawData>(MANAGER_OPTS)(
+        query
+      )
+
+      let res: RawData[]
+
+      paginatorSubject.subscribe({
+        next(val) {
+          expect(val.length).toBe(1)
+          res = val
+        },
+        complete() {
+          expect(res).toBeTruthy()
+          done()
+        }
+      })
+
+      autoPaginator$(manager, paginatorSubject).subscribe({
+        complete() {
+          expect(res).toBeTruthy()
+          expect(res.length).toBe(1)
+          done()
+        }
+      })
     })
   })
 })

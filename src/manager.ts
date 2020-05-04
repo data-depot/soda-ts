@@ -1,7 +1,7 @@
 // pkgs
 import { pipe } from 'ramda'
 import debug from 'debug'
-import { Subject } from 'rxjs'
+import { Subject, from, Observable, defer } from 'rxjs'
 
 // local
 import { AuthOpts, Query } from './types'
@@ -152,11 +152,18 @@ export const autoPaginator = async <T>(
   subject.complete()
 }
 
-// TODO: feat: add lazy `autoPaginator$`
-// currently we are expsoing an async/await fn to run
-// our paginator. It's not the most elegant. Best approach
-// would be to wrap the promise in a defered observable.
-// this way, one the `autoPaginator$` observable is subscrtibed too,
-// it'll only then trigger the data fetch procedure. This
-// also provides a nice integration point in projects where
-// observables are being used
+/**
+ * lazy observable wrapper around autoPaginator to
+ * automatically paginate through a data set
+ *
+ * @param manager runner manager used to grab and paginate through data
+ * @param subject subject used to publish acquired data
+ *
+ * @returns lazy observable which initiates `autoPaginator`
+ */
+export const autoPaginator$ = <T>(
+  manager: Manager<T>,
+  subject: Subject<T[]>
+): Observable<void> => {
+  return defer(() => from(autoPaginator(manager, subject)))
+}
