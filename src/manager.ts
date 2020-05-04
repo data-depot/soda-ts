@@ -146,8 +146,10 @@ export const autoPaginator = async <T>(
       subject.next(res)
     } catch (e) {
       subject.error(e)
+      break
     }
   } while (currentPageSize === manager.limit)
+  subject.complete()
 }
 
 // TODO: feat: add lazy `autoPaginator$`

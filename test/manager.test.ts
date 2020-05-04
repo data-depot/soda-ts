@@ -1,5 +1,6 @@
 // pkgs
 import { Subject } from 'rxjs'
+import { pipe } from 'ramda'
 
 // local
 import {
@@ -8,7 +9,8 @@ import {
   Query,
   createManagerCreator,
   autoPaginator,
-  Manager
+  Manager,
+  where
 } from '../src'
 import {
   RawData,
@@ -149,6 +151,29 @@ describe('manager', () => {
         if (currReq === 2) {
           expect(currReq).toBe(2)
           expect(oldData).not.toStrictEqual(currData)
+          done()
+        }
+      })
+
+      await autoPaginator(manager, paginatorSubject)
+    })
+
+    // eslint-disable-next-line jest/no-test-callback
+    it('completion', async (done) => {
+      query = pipe(
+        createQuery,
+        where`license_nbr='1232665-DCA'`
+      )('w7w3-xahh', undefined)
+
+      manager = createManagerCreator<RawData>(MANAGER_OPTS)(
+        query
+      )
+
+      paginatorSubject.subscribe({
+        next(val) {
+          expect(val.length).toBe(1)
+        },
+        complete() {
           done()
         }
       })
