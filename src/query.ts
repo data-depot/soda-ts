@@ -20,6 +20,8 @@ interface QueryOpts {
  * @returns `Query` object used by runners to make requests
  */
 export const createQuery = (
+  // TODO: BREAKING CHANGE: createQuery shoudl only take queryOpts
+  // src should be included in queryOpts as it improved api for pipe
   src: string,
   queryOpts?: Partial<QueryOpts>
 ): Query => {
