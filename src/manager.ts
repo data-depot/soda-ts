@@ -60,6 +60,7 @@ export interface Manager<T> {
   readonly limit: number
   /** offset value for pagination used by manager  */
   readonly offset: number
+  // TODO: feat: add kill fn for pagination
 }
 
 /**
@@ -134,6 +135,8 @@ export const createManagerCreator = <T>(
  *
  */
 export const autoPaginator = async <T>(
+  // TODO: BREAKING CHANGE: turn it into a properly curryable fn like autoPaginator$
+  // this fn would fit that well within flow with pipe
   manager: Manager<T>,
   subject: Subject<T[]>
 ): Promise<void> => {
