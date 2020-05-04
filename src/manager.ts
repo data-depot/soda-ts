@@ -1,7 +1,7 @@
 // pkgs
 import { pipe } from 'ramda'
 import debug from 'debug'
-import { Subject } from 'rxjs'
+import { Subject, from, Observable, defer } from 'rxjs'
 
 // local
 import { AuthOpts, Query } from './types'
@@ -60,6 +60,7 @@ export interface Manager<T> {
   readonly limit: number
   /** offset value for pagination used by manager  */
   readonly offset: number
+  // TODO: feat: add kill fn for pagination
 }
 
 /**
@@ -134,27 +135,36 @@ export const createManagerCreator = <T>(
  *
  */
 export const autoPaginator = async <T>(
+  // TODO: BREAKING CHANGE: turn it into a properly curryable fn like autoPaginator$
+  // this fn would fit that well within flow with pipe
   manager: Manager<T>,
   subject: Subject<T[]>
 ): Promise<void> => {
   let currentPageSize = 0
   do {
     try {
-      manager.paginate()
       const res = await manager.run()
+      manager.paginate()
       currentPageSize = res.length
       subject.next(res)
     } catch (e) {
       subject.error(e)
+      break
     }
   } while (currentPageSize === manager.limit)
+  subject.complete()
 }
 
-// TODO: feat: add lazy `autoPaginator$`
-// currently we are expsoing an async/await fn to run
-// our paginator. It's not the most elegant. Best approach
-// would be to wrap the promise in a defered observable.
-// this way, one the `autoPaginator$` observable is subscrtibed too,
-// it'll only then trigger the data fetch procedure. This
-// also provides a nice integration point in projects where
-// observables are being used
+/**
+ * lazy observable wrapper around autoPaginator to
+ * automatically paginate through a data set
+ *
+ * @param subject subject used to publish acquired data
+ *
+ * @returns curry fn takes a manager and returns lazy observable which initiates `autoPaginator`
+ */
+export const autoPaginator$ = <T>(
+  subject: Subject<T[]>
+) => (manager: Manager<T>): Observable<void> => {
+  return defer(() => from(autoPaginator(manager, subject)))
+}
