@@ -140,8 +140,8 @@ export const autoPaginator = async <T>(
   let currentPageSize = 0
   do {
     try {
-      manager.paginate()
       const res = await manager.run()
+      manager.paginate()
       currentPageSize = res.length
       subject.next(res)
     } catch (e) {
