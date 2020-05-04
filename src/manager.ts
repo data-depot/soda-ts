@@ -156,14 +156,12 @@ export const autoPaginator = async <T>(
  * lazy observable wrapper around autoPaginator to
  * automatically paginate through a data set
  *
- * @param manager runner manager used to grab and paginate through data
  * @param subject subject used to publish acquired data
  *
- * @returns lazy observable which initiates `autoPaginator`
+ * @returns curry fn takes a manager and returns lazy observable which initiates `autoPaginator`
  */
 export const autoPaginator$ = <T>(
-  manager: Manager<T>,
   subject: Subject<T[]>
-): Observable<void> => {
+) => (manager: Manager<T>): Observable<void> => {
   return defer(() => from(autoPaginator(manager, subject)))
 }

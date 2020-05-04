@@ -206,7 +206,7 @@ describe('manager', () => {
         }
       })
 
-      autoPaginator$(manager, paginatorSubject).subscribe({
+      autoPaginator$(paginatorSubject)(manager).subscribe({
         complete() {
           expect(res).toBeTruthy()
           expect(res.length).toBe(1)
