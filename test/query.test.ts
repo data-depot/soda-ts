@@ -23,7 +23,10 @@ describe('query', () => {
   })
 
   it('default domain', () => {
-    const query = createQuery({ src: SRC })
+    const query = createQuery({
+      src: SRC,
+      domain: undefined
+    })
 
     expect(query.domain).toBe('data.cityofnewyork.us')
   })
@@ -41,5 +44,14 @@ describe('query', () => {
     })
 
     expect(query.apiPath).toBe('api/catalog/v1')
+  })
+
+  it('set domain', () => {
+    const query = createQuery({
+      src: SRC,
+      domain: 'TEST'
+    })
+
+    expect(query.domain).toBe('TEST')
   })
 })

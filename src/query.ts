@@ -22,10 +22,11 @@ interface QueryOpts {
  */
 export const createQuery = ({
   src,
-  ...queryOpts
+  domain,
+  apiPath
 }: QueryOpts): Query => ({
   src: src,
-  domain: queryOpts?.domain ?? 'data.cityofnewyork.us',
-  apiPath: queryOpts?.apiPath ?? 'resource',
+  domain: domain ?? 'data.cityofnewyork.us',
+  apiPath: apiPath ?? 'resource',
   clauses: []
 })
