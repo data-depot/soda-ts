@@ -5,7 +5,7 @@ const DOMAIN = 'data.cityofnewyork.us'
 
 describe('query', () => {
   it('queryCreator', () => {
-    const query = createQuery(SRC)
+    const query = createQuery({ src: SRC })
 
     expect(query).toStrictEqual({
       src: SRC,
@@ -17,27 +17,26 @@ describe('query', () => {
 
   it('custom domain', () => {
     const DOMAIN = 'test.test.nyc'
-    const query = createQuery(SRC, {
-      domain: DOMAIN
-    })
+    const query = createQuery({ src: SRC, domain: DOMAIN })
 
     expect(query.domain).toBe(DOMAIN)
   })
 
   it('default domain', () => {
-    const query = createQuery(SRC)
+    const query = createQuery({ src: SRC })
 
     expect(query.domain).toBe('data.cityofnewyork.us')
   })
 
   it('default api path', () => {
-    const query = createQuery(SRC)
+    const query = createQuery({ src: SRC })
 
     expect(query.apiPath).toBe('resource')
   })
 
   it('set api path', () => {
-    const query = createQuery(SRC, {
+    const query = createQuery({
+      src: SRC,
       apiPath: 'api/catalog/v1'
     })
 

@@ -24,7 +24,7 @@ describe('manager', () => {
     let query: Query
 
     beforeEach(() => {
-      query = createQuery('w7w3-xahh')
+      query = createQuery({ src: 'w7w3-xahh' })
     })
 
     it('updates query clauses', async () => {
@@ -45,7 +45,7 @@ describe('manager', () => {
     // let authenticatedRunner: ReturnType<typeof createRunner>
 
     beforeEach(() => {
-      query = createQuery('w7w3-xahh')
+      query = createQuery({ src: 'w7w3-xahh' })
     })
 
     it('run', async () => {
@@ -83,7 +83,7 @@ describe('manager', () => {
     let manager: Manager<RawData>
 
     beforeEach(() => {
-      query = createQuery('w7w3-xahh')
+      query = createQuery({ src: 'w7w3-xahh' })
       paginatorSubject = new Subject<RawData[]>()
       manager = createManagerCreator<RawData>(MANAGER_OPTS)(
         query
@@ -120,7 +120,7 @@ describe('manager', () => {
 
     // eslint-disable-next-line jest/no-test-callback
     it('auto pagination failure sends out error', async (done) => {
-      const newQuery = createQuery('')
+      const newQuery = createQuery({ src: '' })
       const newManager = createManagerCreator<RawData>(
         MANAGER_OPTS
       )(newQuery)
@@ -164,7 +164,7 @@ describe('manager', () => {
       query = pipe(
         createQuery,
         where`license_nbr='1232665-DCA'`
-      )('w7w3-xahh', undefined)
+      )({ src: 'w7w3-xahh' })
 
       manager = createManagerCreator<RawData>(MANAGER_OPTS)(
         query
@@ -202,7 +202,7 @@ describe('manager', () => {
         where`license_nbr='1232665-DCA'`,
         createManagerCreator<RawData>(MANAGER_OPTS),
         autoPaginator$(paginatorSubject)
-      )('w7w3-xahh', undefined).subscribe({
+      )({ src: 'w7w3-xahh' }).subscribe({
         complete() {
           expect(res).toBeTruthy()
           expect(res.length).toBe(1)

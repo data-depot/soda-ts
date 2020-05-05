@@ -21,7 +21,7 @@ describe('createRunner', () => {
   let authenticatedRunner: ReturnType<typeof createRunner>
 
   beforeAll(() => {
-    query = createQuery('w7w3-xahh')
+    query = createQuery({ src: 'w7w3-xahh' })
     runner = createRunner()
     authenticatedRunner = createRunner(authOpts)
   })
@@ -41,7 +41,8 @@ describe('createRunner', () => {
     it('gt operator ', async () => {
       expect(authOpts.appToken).not.toBeUndefined()
 
-      const query = createQuery('4tka-6guv', {
+      const query = createQuery({
+        src: '4tka-6guv',
         domain: 'soda.demo.socrata.com'
       })
 
@@ -58,7 +59,8 @@ describe('createRunner', () => {
     it('like operator ', async () => {
       expect(authOpts.appToken).not.toBeUndefined()
 
-      const query = createQuery('w7w3-xahh', {
+      const query = createQuery({
+        src: 'w7w3-xahh',
         domain: 'data.cityofnewyork.us'
       })
 
@@ -75,7 +77,8 @@ describe('createRunner', () => {
     it('eq operator ', async () => {
       expect(authOpts.appToken).not.toBeUndefined()
 
-      const query = createQuery('w7w3-xahh', {
+      const query = createQuery({
+        src: 'w7w3-xahh',
         domain: 'data.cityofnewyork.us'
       })
 
@@ -99,7 +102,8 @@ describe('createRunner', () => {
         .slice(0, 19)
       expect(authOpts.appToken).not.toBeUndefined()
 
-      const query = createQuery('w7w3-xahh', {
+      const query = createQuery({
+        src: 'w7w3-xahh',
         domain: 'data.cityofnewyork.us'
       })
 
@@ -117,7 +121,8 @@ describe('createRunner', () => {
         appToken: process.env.APP_TOKEN
       }
 
-      const query = createQuery('w7w3-xahh', {
+      const query = createQuery({
+        src: 'w7w3-xahh',
         domain: 'data.cityofnewyork.us'
       })
 
