@@ -36,6 +36,19 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: 'data-depot'
 
+      - name: Use cached node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: nodeModules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            nodeModules-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        env:
+          CI: true
+
       - name: Publish To GitHub Package Registry
         if: steps.semantic.outputs.new_release_published == 'true'
         run: |
