@@ -4,7 +4,8 @@ import {
   Query,
   where,
   limit,
-  offset
+  offset,
+  createRunner$
 } from '../src'
 import { pipe } from 'ramda'
 
@@ -146,5 +147,21 @@ describe('createRunner', () => {
     await expect(
       misAuthenticatedRunner(query)
     ).rejects.toThrow()
+  })
+
+  // eslint-disable-next-line jest/no-test-callback
+  it('createRunner$', (done) => {
+    const authOpts = {
+      appToken: process.env.APP_TOKEN
+    }
+    createRunner$<RawData[]>(authOpts)(query).subscribe(
+      (val) => {
+        expect(val).toBeTruthy()
+        expect(
+          Object.keys(val[0]).length
+        ).toBeGreaterThanOrEqual(10)
+        done()
+      }
+    )
   })
 })

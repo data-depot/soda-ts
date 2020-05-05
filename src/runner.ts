@@ -2,6 +2,7 @@
 import { URLSearchParams } from 'url'
 import got from 'got'
 import debug from 'debug'
+import { defer, from } from 'rxjs'
 
 // local
 import { Query, AuthOpts } from './types'
@@ -79,3 +80,7 @@ export const createRunner = <T>(
     throw new Error(e.message)
   }
 }
+
+export const createRunner$ = <T>(authOpts?: AuthOpts) => (
+  query: Query
+) => defer(() => from(createRunner<T>(authOpts)(query)))
