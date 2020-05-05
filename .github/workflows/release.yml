@@ -34,9 +34,7 @@ jobs:
         id: semantic
         with:
           branch: master
-          dry_run: github.event.pull_request.merged == 'false'
-          extra_plugins: |
-            @semantic-release/git
+          extra_plugins: | 
             @semantic-release/changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
