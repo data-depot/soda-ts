@@ -46,7 +46,7 @@
       "prettier --write"
     ]
   },
-  "name": "soda-ts",
+  "name": "@data-depot/soda-ts",
   "author": "Walee Ahmed",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
