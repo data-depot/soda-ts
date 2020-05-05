@@ -5,6 +5,8 @@ import { Query } from './types'
  * options for the `createQuery` fn
  */
 interface QueryOpts {
+  /** source data id */
+  src: string
   /** domain of data source */
   domain?: string
   /** rest path associated with api and domain */
@@ -14,25 +16,17 @@ interface QueryOpts {
 /**
  * create Query Object for SODA req
  *
- * @param src data source identifier
  * @param queryOpts
  *
- * @returns `Query` object used by runners to make requests
+ * @returns `Query` curried fn used by runners & managers to make requests
  */
-export const createQuery = (
-  // TODO: BREAKING CHANGE: createQuery shoudl only take queryOpts
-  // src should be included in queryOpts as it improved api for pipe
-  src: string,
-  queryOpts?: Partial<QueryOpts>
-): Query => {
-  const domain =
-    queryOpts?.domain ?? 'data.cityofnewyork.us'
-  const apiPath = queryOpts?.apiPath ?? 'resource'
-
-  return {
-    src,
-    domain,
-    apiPath,
-    clauses: []
-  }
-}
+export const createQuery = ({
+  src,
+  domain,
+  apiPath
+}: QueryOpts): Query => ({
+  src: src,
+  domain: domain ?? 'data.cityofnewyork.us',
+  apiPath: apiPath ?? 'resource',
+  clauses: []
+})

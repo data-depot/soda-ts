@@ -15,7 +15,7 @@ describe('clauses', () => {
   let query: Query
 
   beforeEach(() => {
-    query = createQuery('w7w3-xahh')
+    query = createQuery({ src: 'w7w3-xahh' })
   })
 
   it('createClause attaches to query', () => {
