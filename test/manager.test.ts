@@ -193,7 +193,6 @@ describe('manager', () => {
 
       paginatorSubject.subscribe({
         next(val) {
-          console.log(val)
           expect(val.length).toBe(1)
           res = val
         },
@@ -241,7 +240,6 @@ describe('manager', () => {
 
       paginatorSubject.subscribe({
         next(val) {
-          console.log(val)
           expect(val.length).toBe(1)
           res = val
         }
