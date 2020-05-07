@@ -1,5 +1,7 @@
 # soda-ts
 
+[![npm version](https://badge.fury.io/js/soda-ts.svg)](https://badge.fury.io/js/soda-ts)
+
 ## functional SoQL wrapper to interact with open data
 
 | branch  |                                                                     coverage                                                                     |
