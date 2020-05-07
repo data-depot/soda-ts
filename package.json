@@ -45,8 +45,10 @@
       "prettier --write"
     ]
   },
-  "name": "@data-depot/soda-ts",
-  "author": "Walee Ahmed",
+  "name": "soda-ts",
+  "author": "opensource@datadepot.rocks",
+  "repository": "https://github.com/data-depot/soda-ts",
+  "homepage": "https://github.com/data-depot/soda-ts",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
@@ -83,8 +85,5 @@
     "got": "^11.0.2",
     "ramda": "^0.27.0",
     "rxjs": "^6.5.5"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
