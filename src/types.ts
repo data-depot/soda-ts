@@ -27,4 +27,5 @@ export interface Query {
 export interface AuthOpts {
   // apiToken?: string
   appToken?: string
+  keysCamelCased?: boolean
 }

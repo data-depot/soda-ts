@@ -3,6 +3,7 @@ import { URLSearchParams } from 'url'
 import got from 'got'
 import debug from 'debug'
 import { defer, from } from 'rxjs'
+import camelCaseKeys from 'camelcase-keys'
 
 // local
 import { Query, AuthOpts } from './types'
@@ -75,7 +76,13 @@ export const createRunner = <T>(
         // }
       })
       .json<T>()
-    return res
+
+    if (authOpts?.keysCamelCased) {
+      return camelCaseKeys(res)
+    } else {
+      return res
+    }
+    // return res
   } catch (e) {
     throw new Error(e.message)
   }

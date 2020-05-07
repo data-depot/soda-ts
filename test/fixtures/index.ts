@@ -13,6 +13,15 @@ export const MANAGER_OPTS = {
   }
 }
 
+export const MANAGER_OPTS_CAMEL_CASE_KEYS = {
+  limit: 5,
+  offset: 0,
+  authOpts: {
+    appToken: process.env.APP_TOKEN,
+    keysCamelCased: true
+  }
+}
+
 /* eslint-disable */
 export const RAW_DATA = {
   license_nbr: '1187577-DCA',

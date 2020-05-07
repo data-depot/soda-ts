@@ -34,7 +34,9 @@ jobs:
         id: semantic
         with:
           branch: master
-          extra_plugins: | 
+          dry_run: true
+          extra_plugins: |
+            @semantic-release/git
             @semantic-release/changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
