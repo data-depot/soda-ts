@@ -31,6 +31,9 @@ domain defaults to `NYC Open Data`
 import { createQuery } from 'soda-ts'
 
 const query = createQuery({ src: 'w7w3-xahh' })
+
+// to pull from other domains
+const query = createQuery({ domain: 'data.cityofchicago.org', src: 'ydr8-5enu' })
 ```
 
 A raw `query` is the most primitive form of query.
