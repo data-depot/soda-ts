@@ -16,6 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Use Node 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: 'data-depot'
+
       - name: Use cached node_modules
         uses: actions/cache@v1
         with:
@@ -33,11 +41,10 @@ jobs:
         uses: cycjimmy/semantic-release-action@v2
         id: semantic
         with:
-          semantic_version: 16
           branch: master
           extra_plugins: |
-            @semantic-release/changelog
             @semantic-release/git
+            @semantic-release/changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
