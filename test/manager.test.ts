@@ -16,6 +16,7 @@ import {
 import {
   RawData,
   MANAGER_OPTS,
+  MANAGER_OPTS_CAMEL_CASE_KEYS,
   PAGINATION_OPTS
 } from './fixtures'
 
@@ -83,7 +84,9 @@ describe('manager', () => {
     let manager: Manager<RawData>
 
     beforeEach(() => {
-      query = createQuery({ src: 'w7w3-xahh' })
+      query = createQuery({
+        src: 'w7w3-xahh'
+      })
       paginatorSubject = new Subject<RawData[]>()
       manager = createManagerCreator<RawData>(MANAGER_OPTS)(
         query
@@ -164,7 +167,9 @@ describe('manager', () => {
       query = pipe(
         createQuery,
         where`license_nbr='1232665-DCA'`
-      )({ src: 'w7w3-xahh' })
+      )({
+        src: 'w7w3-xahh'
+      })
 
       manager = createManagerCreator<RawData>(MANAGER_OPTS)(
         query
@@ -202,11 +207,41 @@ describe('manager', () => {
         where`license_nbr='1232665-DCA'`,
         createManagerCreator<RawData>(MANAGER_OPTS),
         autoPaginator$(paginatorSubject)
-      )({ src: 'w7w3-xahh' }).subscribe({
+      )({
+        src: 'w7w3-xahh'
+      }).subscribe({
         complete() {
           expect(res).toBeTruthy()
           expect(res.length).toBe(1)
           done()
+        }
+      })
+    })
+    // eslint-disable-next-line jest/no-test-callback
+    it('autoPaginator$ with camelCased keys', (done) => {
+      let res: RawData[]
+
+      pipe(
+        createQuery,
+        where`license_nbr='1232665-DCA'`,
+        createManagerCreator<RawData>(
+          MANAGER_OPTS_CAMEL_CASE_KEYS
+        ),
+        autoPaginator$(paginatorSubject)
+      )({
+        src: 'w7w3-xahh'
+      }).subscribe({
+        complete() {
+          expect(res).toBeTruthy()
+          expect(res.length).toBe(1)
+          done()
+        }
+      })
+
+      paginatorSubject.subscribe({
+        next(val) {
+          expect(val.length).toBe(1)
+          res = val
         }
       })
     })
