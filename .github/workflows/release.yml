@@ -22,7 +22,6 @@ jobs:
           node-version: 12.x
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           registry-url: 'https://npm.pkg.github.com'
-          scope: 'data-depot'
 
       - name: Use cached node_modules
         uses: actions/cache@v1
