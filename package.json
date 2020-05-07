@@ -45,7 +45,7 @@
       "prettier --write"
     ]
   },
-  "name": "@data-depot/soda-ts",
+  "name": "soda-ts",
   "author": "opensource@datadepot.rocks",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
