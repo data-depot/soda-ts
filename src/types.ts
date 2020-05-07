@@ -26,6 +26,8 @@ export interface Query {
 
 export interface AuthOpts {
   // apiToken?: string
+  /** appToken userd to make authenticated req */
   appToken?: string
+  /** whether to serialize response keys to camelCase */
   keysCamelCased?: boolean
 }

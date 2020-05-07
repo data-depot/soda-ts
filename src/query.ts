@@ -16,7 +16,7 @@ interface QueryOpts {
 /**
  * create Query Object for SODA req
  *
- * @param queryOpts
+ * @param queryOpts options to create a query w/
  *
  * @returns `Query` curried fn used by runners & managers to make requests
  */
