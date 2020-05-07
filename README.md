@@ -1,13 +1,13 @@
 # soda-ts
 
+functional SoQL wrapper to interact with Open Data API
+
 [![npm version](https://badge.fury.io/js/soda-ts.svg)](https://badge.fury.io/js/soda-ts)
 
-## functional SoQL wrapper to interact with Open Data API
-
-| branch  |                                                                     coverage                                                                     |
-| :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: |
-| staging | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/staging/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts) |
-| master  | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/master/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts)  |
+| branch  |                                                                     coverage                                                                     |                                         CI                                         |
+| :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| staging | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/staging/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts) | ![CI](https://github.com/data-depot/soda-ts/workflows/CI/badge.svg?branch=staging) |
+| master  | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/master/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts)  | ![CI](https://github.com/data-depot/soda-ts/workflows/CI/badge.svg?branch=staging) |
 
 ### install
 
