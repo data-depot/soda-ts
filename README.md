@@ -1,6 +1,6 @@
 # soda-ts
 
-## functional SoQL wrapper to interact with open data
+## functional SoQL wrapper to interact with Open Data API
 
 | branch  |                                                                     coverage                                                                     |
 | :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: |
