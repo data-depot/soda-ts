@@ -1,5 +1,6 @@
 module.exports = {
   dryRun: false,
+  branches: ["master"],
   plugins: [
     '@semantic-release/commit-analyzer',
     '@semantic-release/release-notes-generator',
@@ -19,9 +20,7 @@ module.exports = {
           'package.json',
           'package-lock.json'
         ],
-        message:
-          // eslint-disable-next-line no-template-curly-in-string
-          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
+        message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
       }
     ]
   ]
