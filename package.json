@@ -47,6 +47,8 @@
   },
   "name": "soda-ts",
   "author": "opensource@datadepot.rocks",
+  "repository": "https://github.com/data-depot/soda-ts",
+  "homepage": "https://github.com/data-depot/soda-ts",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
