@@ -26,7 +26,7 @@ domain defaults to `NYC Open Data`
 #### `createQuery`
 
 ```ts
-import { createQuery } from '@data-depot/soda-ts'
+import { createQuery } from 'soda-ts'
 
 const query = createQuery({ src: 'w7w3-xahh' })
 ```
@@ -36,7 +36,7 @@ To make it more interesting, we need to compose it
 with `clauses`
 
 ```ts
-import { createQuery, where } from '@data-depot/soda-ts'
+import { createQuery, where } from 'soda-ts'
 import { pipe } from 'ramda'
 
 const query = pipe(
@@ -53,7 +53,7 @@ wrappers. For simple requests, `createRunner`, which is
 the `Observable` api.
 
 ```ts
-import { createQuery, where, createRunner$ } from '@data-depot/soda-ts'
+import { createQuery, where, createRunner$ } from 'soda-ts'
 import { pipe } from 'ramda'
 
 const authOpts = {
@@ -83,7 +83,7 @@ we can write declarative code to handle all the side effects
 cleanly.
 
 ```ts
-import { createQuery, where, autoPaginator$, createManagerCreator } from '@data-depot/soda-ts'
+import { createQuery, where, autoPaginator$, createManagerCreator } from 'soda-ts'
 import { pipe } from 'ramda'
 import { Subject } from 'rxjs'
 
