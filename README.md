@@ -1,6 +1,6 @@
 # soda-ts
 
-## functional SoSQL wrapper to interact with open data
+## functional SoQL wrapper to interact with open data
 
 | branch  |                                                                     coverage                                                                     |
 | :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -96,17 +96,17 @@ export const managerOpts = {
   }
 }
 
-const paginatorSub = new Subject()
+const paginatorSub$ = new Subject()
 
 // create query
-const query = pipe(
+const paginator$ = pipe(
     createQuery
     where``
     createManagerCreator<RawData>(managerOpts),
-    autoPaginator$(paginatorSub)
-)({ src: '' })
+    autoPaginator$(paginatorSub$)
+)({ src: 'w7w3-xahh' })
 
-paginatorSubject.subscribe({
+paginatorSub$.subscribe({
     next(val) {
         // whatever you'd like to do with each page of data
     },
@@ -118,7 +118,7 @@ paginatorSubject.subscribe({
     }
 })
 
-query.subscribe(
+paginator$.subscribe(
         error: (e) => {
             // handle if auto paginator breaks
         },
