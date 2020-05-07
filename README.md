@@ -11,7 +11,7 @@
 
 ```bash
 # for js
-yarn add ramda rxjs @data-depot/soda-ts
+yarn add ramda rxjs soda-ts
 # for ts
 yarn add -D @types/ramda
 ```
