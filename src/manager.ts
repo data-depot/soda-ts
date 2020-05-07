@@ -10,10 +10,17 @@ import { createRunner } from './runner'
 
 const logger = debug('soda-ts:manager')
 
+// TODO: clean up options
+// currently we have option types all over. We should
+// unifity them and resuse nested types as needed
+
 /** options for pagiantion manager creation */
 interface ManagerOpts {
+  /** pagiantion item limits */
   limit: number
+  /** items to offset by for req */
   offset: number
+  /** options for authenticated req */
   authOpts?: AuthOpts
 }
 

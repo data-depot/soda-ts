@@ -10,6 +10,7 @@ import { Query, AuthOpts } from './types'
 import { queryClauseTransformer } from './clauses'
 
 const logger = debug('soda-ts:runner')
+
 /**
  * create runner functions which uses `Query` to get data
  *
@@ -51,6 +52,7 @@ export const createRunner = <T>(
     )}`
   )
 
+  // TODO: extract params generation into a fn
   const searchParams = new URLSearchParams(clauseParams)
   logger(
     `making req with params: ${searchParams.toString()}`
@@ -88,6 +90,11 @@ export const createRunner = <T>(
   }
 }
 
+/**
+ * fn to create observable runner curry fn
+ *
+ * @param authOpts options for authentication
+ */
 export const createRunner$ = <T>(authOpts?: AuthOpts) => (
   query: Query
 ) => defer(() => from(createRunner<T>(authOpts)(query)))
