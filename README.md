@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/soda-ts.svg)](https://badge.fury.io/js/soda-ts)
 
-## functional SoQL wrapper to interact with open data
+## functional SoQL wrapper to interact with Open Data API
 
 | branch  |                                                                     coverage                                                                     |
 | :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -13,7 +13,7 @@
 
 ```bash
 # for js
-yarn add ramda rxjs @data-depot/soda-ts
+yarn add ramda rxjs soda-ts
 # for ts
 yarn add -D @types/ramda
 ```
@@ -28,7 +28,7 @@ domain defaults to `NYC Open Data`
 #### `createQuery`
 
 ```ts
-import { createQuery } from '@data-depot/soda-ts'
+import { createQuery } from 'soda-ts'
 
 const query = createQuery({ src: 'w7w3-xahh' })
 ```
@@ -38,7 +38,7 @@ To make it more interesting, we need to compose it
 with `clauses`
 
 ```ts
-import { createQuery, where } from '@data-depot/soda-ts'
+import { createQuery, where } from 'soda-ts'
 import { pipe } from 'ramda'
 
 const query = pipe(
@@ -55,7 +55,7 @@ wrappers. For simple requests, `createRunner`, which is
 the `Observable` api.
 
 ```ts
-import { createQuery, where, createRunner$ } from '@data-depot/soda-ts'
+import { createQuery, where, createRunner$ } from 'soda-ts'
 import { pipe } from 'ramda'
 
 const authOpts = {
@@ -85,7 +85,7 @@ we can write declarative code to handle all the side effects
 cleanly.
 
 ```ts
-import { createQuery, where, autoPaginator$, createManagerCreator } from '@data-depot/soda-ts'
+import { createQuery, where, autoPaginator$, createManagerCreator } from 'soda-ts'
 import { pipe } from 'ramda'
 import { Subject } from 'rxjs'
 
@@ -100,14 +100,6 @@ export const managerOpts = {
 
 const paginatorSub$ = new Subject()
 
-// create query
-const paginator$ = pipe(
-    createQuery
-    where``
-    createManagerCreator<RawData>(managerOpts),
-    autoPaginator$(paginatorSub$)
-)({ src: 'w7w3-xahh' })
-
 paginatorSub$.subscribe({
     next(val) {
         // whatever you'd like to do with each page of data
@@ -120,12 +112,16 @@ paginatorSub$.subscribe({
     }
 })
 
-paginator$.subscribe(
-        error: (e) => {
-            // handle if auto paginator breaks
-        },
-        complete: () => {
-            // pagination completed
-        }
-    )
+pipe(
+  createQuery
+  where`SOMETHING > 0`
+  createManagerCreator<RawData>(managerOpts),
+  autoPaginator$(paginatorSub$)
+)({ src: 'w7w3-xahh' }).subscribe({
+  error: () => {
+    // handle if auto paginator breaks
+},
+  complete: () => {
+    // pagination completed
+}})
 ```
