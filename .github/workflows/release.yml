@@ -34,7 +34,6 @@ jobs:
         id: semantic
         with:
           branch: master
-          dry_run: true
           extra_plugins: |
             @semantic-release/git
             @semantic-release/changelog
