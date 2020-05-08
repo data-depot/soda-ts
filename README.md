@@ -1,17 +1,19 @@
 # soda-ts
 
-## functional SoSQL wrapper to interact with open data
+functional SoQL wrapper to interact with Open Data API
 
-| branch  |                                                                     coverage                                                                     |
-| :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: |
-| staging | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/staging/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts) |
-| master  | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/master/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts)  |
+[![npm version](https://badge.fury.io/js/soda-ts.svg)](https://badge.fury.io/js/soda-ts)
+
+| branch  |                                                                     coverage                                                                     |                                         CI                                         |
+| :------ | :----------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| staging | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/staging/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts) | ![CI](https://github.com/data-depot/soda-ts/workflows/CI/badge.svg?branch=staging) |
+| master  | [![codecov](https://codecov.io/gh/data-depot/soda-ts/branch/master/graph/badge.svg?token=6996L6JATW)](https://codecov.io/gh/data-depot/soda-ts)  | ![CI](https://github.com/data-depot/soda-ts/workflows/CI/badge.svg?branch=staging) |
 
 ### install
 
 ```bash
 # for js
-yarn add ramda rxjs @data-depot/soda-ts
+yarn add ramda rxjs soda-ts
 # for ts
 yarn add -D @types/ramda
 ```
@@ -26,9 +28,12 @@ domain defaults to `NYC Open Data`
 #### `createQuery`
 
 ```ts
-import { createQuery } from '@data-depot/soda-ts'
+import { createQuery } from 'soda-ts'
 
 const query = createQuery({ src: 'w7w3-xahh' })
+
+// to pull from other domains
+const query = createQuery({ domain: 'data.cityofchicago.org', src: 'ydr8-5enu' })
 ```
 
 A raw `query` is the most primitive form of query.
@@ -36,7 +41,7 @@ To make it more interesting, we need to compose it
 with `clauses`
 
 ```ts
-import { createQuery, where } from '@data-depot/soda-ts'
+import { createQuery, where } from 'soda-ts'
 import { pipe } from 'ramda'
 
 const query = pipe(
@@ -53,7 +58,7 @@ wrappers. For simple requests, `createRunner`, which is
 the `Observable` api.
 
 ```ts
-import { createQuery, where, createRunner$ } from '@data-depot/soda-ts'
+import { createQuery, where, createRunner$ } from 'soda-ts'
 import { pipe } from 'ramda'
 
 const authOpts = {
@@ -83,7 +88,7 @@ we can write declarative code to handle all the side effects
 cleanly.
 
 ```ts
-import { createQuery, where, autoPaginator$, createManagerCreator } from '@data-depot/soda-ts'
+import { createQuery, where, autoPaginator$, createManagerCreator } from 'soda-ts'
 import { pipe } from 'ramda'
 import { Subject } from 'rxjs'
 
@@ -96,17 +101,9 @@ export const managerOpts = {
   }
 }
 
-const paginatorSub = new Subject()
+const paginatorSub$ = new Subject()
 
-// create query
-const query = pipe(
-    createQuery
-    where``
-    createManagerCreator<RawData>(managerOpts),
-    autoPaginator$(paginatorSub)
-)({ src: '' })
-
-paginatorSubject.subscribe({
+paginatorSub$.subscribe({
     next(val) {
         // whatever you'd like to do with each page of data
     },
@@ -118,12 +115,16 @@ paginatorSubject.subscribe({
     }
 })
 
-query.subscribe(
-        error: (e) => {
-            // handle if auto paginator breaks
-        },
-        complete: () => {
-            // pagination completed
-        }
-    )
+pipe(
+  createQuery
+  where`SOMETHING > 0`
+  createManagerCreator<RawData>(managerOpts),
+  autoPaginator$(paginatorSub$)
+)({ src: 'w7w3-xahh' }).subscribe({
+  error: () => {
+    // handle if auto paginator breaks
+},
+  complete: () => {
+    // pagination completed
+}})
 ```
