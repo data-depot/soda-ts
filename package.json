@@ -9,6 +9,13 @@
   "engines": {
     "node": ">=10"
   },
+  "keywords": [
+    "soda",
+    "opendata",
+    "socrata",
+    "rxjs",
+    "typescript"
+  ],
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
