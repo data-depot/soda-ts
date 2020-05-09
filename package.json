@@ -15,7 +15,8 @@
     "opendata",
     "socrata",
     "rxjs",
-    "typescript"
+    "typescript",
+    "javascript"
   ],
   "scripts": {
     "start": "tsdx watch",
