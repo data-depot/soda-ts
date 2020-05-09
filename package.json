@@ -1,4 +1,5 @@
 {
+  "version": "0.1.6",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -9,6 +10,14 @@
   "engines": {
     "node": ">=10"
   },
+  "keywords": [
+    "soda",
+    "opendata",
+    "socrata",
+    "rxjs",
+    "typescript",
+    "javascript"
+  ],
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
@@ -49,6 +58,7 @@
   "author": "opensource@datadepot.rocks",
   "repository": "https://github.com/data-depot/soda-ts",
   "homepage": "https://github.com/data-depot/soda-ts",
+  "description": "Seamlessly interact with OpenData APIs in TS or JS",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
