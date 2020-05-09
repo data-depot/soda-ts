@@ -56,6 +56,7 @@
   "author": "opensource@datadepot.rocks",
   "repository": "https://github.com/data-depot/soda-ts",
   "homepage": "https://github.com/data-depot/soda-ts",
+  "description": "Seamlessly interact with OpenData APIs in TS or JS",
   "module": "dist/soda-ts.esm.js",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
