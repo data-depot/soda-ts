@@ -101,7 +101,7 @@ describe('manager', () => {
         done()
       })
 
-      await autoPaginator(manager, paginatorSubject)
+      await autoPaginator(paginatorSubject)(manager)
     })
 
     // eslint-disable-next-line jest/no-test-callback
@@ -118,7 +118,7 @@ describe('manager', () => {
         }
       })
 
-      await autoPaginator(manager, paginatorSubject)
+      await autoPaginator(paginatorSubject)(manager)
     })
 
     // eslint-disable-next-line jest/no-test-callback
@@ -135,7 +135,7 @@ describe('manager', () => {
         }
       })
 
-      await autoPaginator(newManager, paginatorSubject)
+      await autoPaginator(paginatorSubject)(newManager)
     })
 
     // eslint-disable-next-line jest/no-test-callback
@@ -159,7 +159,7 @@ describe('manager', () => {
         }
       })
 
-      await autoPaginator(manager, paginatorSubject)
+      await autoPaginator(paginatorSubject)(manager)
     })
 
     // eslint-disable-next-line jest/no-test-callback
@@ -184,7 +184,7 @@ describe('manager', () => {
         }
       })
 
-      await autoPaginator(manager, paginatorSubject)
+      await autoPaginator(paginatorSubject)(manager)
     })
 
     // eslint-disable-next-line jest/no-test-callback
