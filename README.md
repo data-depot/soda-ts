@@ -14,6 +14,8 @@ functional SoQL wrapper to interact with Open Data API
 ```bash
 # for js
 yarn add ramda rxjs soda-ts
+# for the adventurous 🤷🏼‍♂️
+yarn add https://github.com/data-depot/soda-ts.git
 # for ts
 yarn add -D @types/ramda
 ```
@@ -33,7 +35,10 @@ import { createQuery } from 'soda-ts'
 const query = createQuery({ src: 'w7w3-xahh' })
 
 // to pull from other domains
-const query = createQuery({ domain: 'data.cityofchicago.org', src: 'ydr8-5enu' })
+const query = createQuery({
+  domain: 'data.cityofchicago.org',
+  src: 'ydr8-5enu'
+})
 ```
 
 A raw `query` is the most primitive form of query.
