@@ -15,7 +15,7 @@ const logger = debug('soda-ts:manager')
 // unifity them and resuse nested types as needed
 
 /** options for pagiantion manager creation */
-interface ManagerOpts {
+export interface ManagerOpts {
   /** pagiantion item limits */
   limit: number
   /** items to offset by for req */
@@ -25,7 +25,7 @@ interface ManagerOpts {
 }
 
 /** options for pagination */
-interface PaginationOpts {
+export interface PaginationOpts {
   limit: number
   pageSize: number
   offset: number
