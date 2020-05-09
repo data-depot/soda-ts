@@ -1,4 +1,4 @@
-import { createQuery } from '../src'
+import { createQuery, createQuery$ } from '../src'
 
 const SRC = 'w7w3-xahh'
 const DOMAIN = 'data.cityofnewyork.us'
@@ -53,5 +53,11 @@ describe('query', () => {
     })
 
     expect(query.domain).toBe('TEST')
+  })
+
+  it('createQUery$', () => {
+    createQuery$({ src: SRC }).subscribe((val) => {
+      expect(val.src).toBe(SRC)
+    })
   })
 })
