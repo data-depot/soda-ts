@@ -15,7 +15,7 @@ const logger = debug('soda-ts:manager')
 // unifity them and resuse nested types as needed
 
 /** options for pagiantion manager creation */
-interface ManagerOpts {
+export interface ManagerOpts {
   /** pagiantion item limits */
   limit: number
   /** items to offset by for req */
@@ -25,7 +25,7 @@ interface ManagerOpts {
 }
 
 /** options for pagination */
-interface PaginationOpts {
+export interface PaginationOpts {
   limit: number
   pageSize: number
   offset: number
@@ -141,12 +141,9 @@ export const createManagerCreator = <T>(
  * @param subject subject used to publish acquired data
  *
  */
-export const autoPaginator = async <T>(
-  // TODO: BREAKING CHANGE: turn it into a properly curryable fn like autoPaginator$
-  // this fn would fit that well within flow with pipe
-  manager: Manager<T>,
+export const autoPaginator = <T>(
   subject: Subject<T[]>
-): Promise<void> => {
+) => async (manager: Manager<T>): Promise<void> => {
   let currentPageSize = 0
   do {
     try {
@@ -172,6 +169,5 @@ export const autoPaginator = async <T>(
  */
 export const autoPaginator$ = <T>(
   subject: Subject<T[]>
-) => (manager: Manager<T>): Observable<void> => {
-  return defer(() => from(autoPaginator(manager, subject)))
-}
+) => (manager: Manager<T>): Observable<void> =>
+  defer(() => from(autoPaginator(subject)(manager)))

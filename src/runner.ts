@@ -36,9 +36,10 @@ const logger = debug('soda-ts:runner')
  *  runner
  * )(query)
  */
-export const createRunner = <T>(
-  authOpts?: AuthOpts
-) => async (query: Query): Promise<T> => {
+export const createRunner = <T>({
+  appToken,
+  keysCamelCased
+}: AuthOpts = {}) => async (query: Query): Promise<T> => {
   const url = `https://${query.domain}/${query.apiPath}/${query.src}.json`
 
   logger(`making req to url: ${url}`)
@@ -59,8 +60,8 @@ export const createRunner = <T>(
   )
 
   const headers = {
-    ...(authOpts?.appToken && {
-      'X-App-Token': authOpts?.appToken
+    ...(appToken && {
+      'X-App-Token': appToken
     })
   }
 
@@ -79,7 +80,7 @@ export const createRunner = <T>(
       })
       .json<T>()
 
-    if (authOpts?.keysCamelCased) {
+    if (keysCamelCased) {
       return camelCaseKeys(res)
     } else {
       return res
