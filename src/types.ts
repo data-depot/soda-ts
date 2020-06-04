@@ -30,4 +30,6 @@ export interface AuthOpts {
   appToken?: string
   /** whether to serialize response keys to camelCase */
   keysCamelCased?: boolean
+  /** where to use json or csv files */
+  ext?: 'json' | 'csv'
 }
