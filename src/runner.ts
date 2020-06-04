@@ -38,9 +38,10 @@ const logger = debug('soda-ts:runner')
  */
 export const createRunner = <T>({
   appToken,
-  keysCamelCased
+  keysCamelCased,
+  ext = 'json'
 }: AuthOpts = {}) => async (query: Query): Promise<T> => {
-  const url = `https://${query.domain}/${query.apiPath}/${query.src}.json`
+  const url = `https://${query.domain}/${query.apiPath}/${query.src}.${ext}`
 
   logger(`making req to url: ${url}`)
 
