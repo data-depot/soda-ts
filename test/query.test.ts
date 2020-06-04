@@ -1,4 +1,12 @@
-import { createQuery, createQuery$ } from '../src'
+import {
+  createQuery,
+  createQuery$,
+  where,
+  limit,
+  offset,
+  queryClauseTransformer
+} from '../src'
+import { pipe } from 'ramda'
 
 const SRC = 'w7w3-xahh'
 const DOMAIN = 'data.cityofnewyork.us'
@@ -55,9 +63,47 @@ describe('query', () => {
     expect(query.domain).toBe('TEST')
   })
 
-  it('createQUery$', () => {
+  it('createQuery$', () => {
     createQuery$({ src: SRC }).subscribe((val) => {
       expect(val.src).toBe(SRC)
     })
+  })
+
+  it('query w/ clauses', () => {
+    const src = '3h2n-5cm9'
+    const todaysDate = new Date(new Date().getTime())
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .join('')
+
+    const pollingIssueDate = new Date(
+      new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .join('')
+
+    const query = pipe(
+      createQuery,
+      where`issue_date between '${pollingIssueDate}' and '${todaysDate}'`,
+      limit(10000),
+      offset(0)
+    )({ src })
+
+    expect(query.clauses.length).toBe(3)
+    expect(query.src).toBe(src)
+    expect(query.clauses[2].value).toBe('0')
+    expect(query.clauses[1].value).toBe('10000')
+    expect(query.clauses[0].value).toBe(
+      `issue_date between '${pollingIssueDate}' and '${todaysDate}'`
+    )
+
+    const transformedClauses = queryClauseTransformer(
+      query.clauses
+    )
+
+    expect(transformedClauses[0][0]).toBe('$where')
   })
 })
