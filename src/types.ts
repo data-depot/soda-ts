@@ -1,3 +1,4 @@
+import { URLSearchParams } from 'url'
 /**
  * clauses to be attachec to queries
  */
@@ -23,7 +24,6 @@ export interface Query {
   /** rest path associated with api and domain */
   apiPath: 'resource' | 'api/views' | 'api/catalog/v1'
 }
-
 export interface AuthOpts {
   // apiToken?: string
   /** appToken userd to make authenticated req */
@@ -31,5 +31,9 @@ export interface AuthOpts {
   /** whether to serialize response keys to camelCase */
   keysCamelCased?: boolean
   /** where to use json or csv files */
-  ext?: 'json' | 'csv'
+  ext?: string
+}
+export interface RequestOption {
+  headers: {}
+  searchParams: URLSearchParams
 }

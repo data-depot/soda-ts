@@ -4,9 +4,9 @@ import got from 'got'
 import debug from 'debug'
 import { defer, from } from 'rxjs'
 import camelCaseKeys from 'camelcase-keys'
-
+import parser from 'csv-parse'
 // local
-import { Query, AuthOpts } from './types'
+import { Query, AuthOpts, RequestOption } from './types'
 import { queryClauseTransformer } from './clauses'
 
 const logger = debug('soda-ts:runner')
@@ -36,15 +36,11 @@ const logger = debug('soda-ts:runner')
  *  runner
  * )(query)
  */
-export const createRunner = <T>({
-  appToken,
-  keysCamelCased,
-  ext = 'json'
-}: AuthOpts = {}) => async (query: Query): Promise<T> => {
-  const url = `https://${query.domain}/${query.apiPath}/${query.src}.${ext}`
 
-  logger(`making req to url: ${url}`)
-
+export const optionsForRequest = (
+  query: Query,
+  appToken: string | undefined
+): RequestOption => {
   // TODO: refactor: cleanup param generation into a fn
   // use pure fn to generate the search params
   const clauseParams = queryClauseTransformer(query.clauses)
@@ -70,17 +66,20 @@ export const createRunner = <T>({
     `making req with headers: ${JSON.stringify(headers)}`
   )
 
+  return {
+    headers,
+    searchParams
+  }
+}
+export const createRunner = <T>({
+  appToken,
+  keysCamelCased,
+  ext = 'json'
+}: AuthOpts = {}) => async (query: Query): Promise<T> => {
+  const url = `https://${query.domain}/${query.apiPath}/${query.src}.${ext}`
+  const options = optionsForRequest(query, appToken)
   try {
-    const res = await got
-      .get(url, {
-        headers,
-        searchParams
-        // hooks: {
-        //   beforeRequest: [(options) => logger(options)]
-        // }
-      })
-      .json<T>()
-
+    const res = await got.get(url, options).json<T>()
     if (keysCamelCased) {
       return camelCaseKeys(res)
     } else {
@@ -100,3 +99,28 @@ export const createRunner = <T>({
 export const createRunner$ = <T>(authOpts?: AuthOpts) => (
   query: Query
 ) => defer(() => from(createRunner<T>(authOpts)(query)))
+
+export const createCsvRunner = ({
+  appToken
+}: AuthOpts = {}) => async (
+  query: Query
+): Promise<string[][]> => {
+  const url = `https://${query.domain}/${query.apiPath}/${query.src}.csv`
+  const options = optionsForRequest(query, appToken)
+  const output: Array<[]> = []
+  const res = await got.get(url, options)
+  const parse = parser({
+    delimiter: ','
+  })
+  parse.on('readable', function () {
+    let record: []
+    while ((record = parse.read())) {
+      output.push(record)
+    }
+  })
+  const stringArr = res.body
+  const resBody: string[] = stringArr.split(' ')
+  resBody.forEach((a) => parse.write(a))
+  parse.end()
+  return output
+}

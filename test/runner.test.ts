@@ -1,5 +1,6 @@
 import {
   createRunner,
+  createCsvRunner,
   createQuery,
   Query,
   where,
@@ -163,5 +164,46 @@ describe('createRunner', () => {
         done()
       }
     )
+  })
+
+  it('json support', async () => {
+    const authOpts = {
+      appToken: process.env.App_Token,
+      keyCamelCased: false
+    }
+    query = createQuery({
+      src: 'w7w3-xahh',
+      domain: 'data.cityofnewyork.us',
+      apiPath: 'resource'
+    })
+    const testRunner = await createRunner<RawData[]>(
+      authOpts
+    )
+    const res = await pipe(
+      limit('10'),
+      offset('0'),
+      testRunner
+    )(query)
+    expect(res.length).toBeGreaterThanOrEqual(5)
+  })
+
+  it('csv support', async () => {
+    const authOpts = {
+      appToken: process.env.App_Token,
+      keyCamelCased: false
+    }
+    query = createQuery({
+      src: '3h2n-5cm9',
+      domain: 'data.cityofnewyork.us',
+      apiPath: 'resource'
+    })
+    const testRunner = await createCsvRunner(authOpts)
+    const res = await pipe(
+      limit('5'),
+      offset('0'),
+      testRunner
+    )(query)
+    expect(res).toBeTruthy()
+    expect(res.length).toBeGreaterThanOrEqual(5)
   })
 })
