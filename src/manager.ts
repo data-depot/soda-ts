@@ -6,7 +6,7 @@ import { Subject, from, Observable, defer } from 'rxjs'
 // local
 import { AuthOpts, Query } from './types'
 import { limit, offset } from './clauses'
-import { createRunner } from './runner'
+import { createJsonRunner } from './runner'
 
 const logger = debug('soda-ts:manager')
 
@@ -91,7 +91,7 @@ export const createManagerCreator = <T>(
     offset(paginationOpts.offset)
   )(query)
 
-  const runner = createRunner<T[]>(opts.authOpts)
+  const runner = createJsonRunner<T[]>(opts.authOpts)
 
   const run = (): Promise<T[]> => {
     return runner(paginatedQuery)

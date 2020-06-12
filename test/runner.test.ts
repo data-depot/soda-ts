@@ -1,5 +1,6 @@
 import {
-  createRunner,
+  createRawRunner,
+  createJsonRunner,
   createCsvRunner,
   createQuery,
   Query,
@@ -14,18 +15,18 @@ import { RAW_DATA, RawData } from './fixtures'
 
 describe('createRunner', () => {
   let query: Query
-  let runner: ReturnType<typeof createRunner>
+  let runner: ReturnType<typeof createRawRunner>
 
   const authOpts = {
     appToken: process.env.APP_TOKEN
   }
 
-  let authenticatedRunner: ReturnType<typeof createRunner>
+  let authenticatedRunner: ReturnType<typeof createRawRunner>
 
   beforeAll(() => {
     query = createQuery({ src: 'w7w3-xahh' })
-    runner = createRunner()
-    authenticatedRunner = createRunner(authOpts)
+    runner = createRawRunner()
+    authenticatedRunner = createRawRunner(authOpts)
   })
 
   it('successfully grabs ', async () => {
@@ -48,7 +49,7 @@ describe('createRunner', () => {
         domain: 'soda.demo.socrata.com'
       })
 
-      const testRunner = createRunner<RawData[]>()
+      const testRunner = createJsonRunner<RawData[]>()
 
       const res = pipe(
         where('magnitude > 3.0'),
@@ -66,7 +67,7 @@ describe('createRunner', () => {
         domain: 'data.cityofnewyork.us'
       })
 
-      const testRunner = createRunner<RawData[]>()
+      const testRunner = createJsonRunner<RawData[]>()
 
       const res = pipe(
         where("license_nbr like '1232665-DCA'"),
@@ -84,7 +85,7 @@ describe('createRunner', () => {
         domain: 'data.cityofnewyork.us'
       })
 
-      const testRunner = createRunner<RawData[]>()
+      const testRunner = createJsonRunner<RawData[]>()
 
       const res = pipe(
         where`license_nbr = '1232665-DCA'`,
@@ -109,7 +110,9 @@ describe('createRunner', () => {
         domain: 'data.cityofnewyork.us'
       })
 
-      const testRunner = createRunner<RawData[]>(authOpts)
+      const testRunner = createJsonRunner<RawData[]>(
+        authOpts
+      )
 
       const res = pipe(
         where`license_creation_date between "${RAW_DATA.license_creation_date}" and "${dateToday}"`,
@@ -128,7 +131,9 @@ describe('createRunner', () => {
         domain: 'data.cityofnewyork.us'
       })
 
-      const testRunner = createRunner<RawData[]>(authOpts)
+      const testRunner = createJsonRunner<RawData[]>(
+        authOpts
+      )
 
       const res = pipe(
         limit('5'),
@@ -141,7 +146,7 @@ describe('createRunner', () => {
   })
 
   it('runner fails when invalid token provided', async () => {
-    const misAuthenticatedRunner = createRunner({
+    const misAuthenticatedRunner = createRawRunner({
       appToken: 'au7shiadu7fhdas7s'
     })
 
@@ -176,7 +181,7 @@ describe('createRunner', () => {
       domain: 'data.cityofnewyork.us',
       apiPath: 'resource'
     })
-    const testRunner = await createRunner<RawData[]>(
+    const testRunner = await createJsonRunner<RawData[]>(
       authOpts
     )
     const res = await pipe(
@@ -189,8 +194,7 @@ describe('createRunner', () => {
 
   it('csv support', async () => {
     const authOpts = {
-      appToken: process.env.App_Token,
-      keyCamelCased: false
+      appToken: process.env.App_Token
     }
     query = createQuery({
       src: '3h2n-5cm9',
@@ -205,5 +209,24 @@ describe('createRunner', () => {
     )(query)
     expect(res).toBeTruthy()
     expect(res.length).toBeGreaterThanOrEqual(5)
+  })
+
+  it('createRunnerRaw', async () => {
+    const authOpts = {
+      appToken: process.env.App_Token
+    }
+    query = createQuery({
+      src: '3h2n-5cm9',
+      domain: 'data.cityofnewyork.us',
+      apiPath: 'resource'
+    })
+    const testRunner = await createRawRunner(authOpts)
+    const res = await pipe(
+      limit('5'),
+      offset('0'),
+      testRunner
+    )(query)
+    console.log(testRunner)
+    expect(res).toBeTruthy()
   })
 })

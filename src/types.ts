@@ -1,4 +1,3 @@
-import { URLSearchParams } from 'url'
 /**
  * clauses to be attachec to queries
  */
@@ -32,8 +31,4 @@ export interface AuthOpts {
   keysCamelCased?: boolean
   /** where to use json or csv files */
   ext?: string
-}
-export interface RequestOption {
-  headers: {}
-  searchParams: URLSearchParams
 }

@@ -6,7 +6,7 @@ import { defer, from } from 'rxjs'
 import camelCaseKeys from 'camelcase-keys'
 import parser from 'csv-parse'
 // local
-import { Query, AuthOpts, RequestOption } from './types'
+import { Query, AuthOpts } from './types'
 import { queryClauseTransformer } from './clauses'
 
 const logger = debug('soda-ts:runner')
@@ -36,11 +36,13 @@ const logger = debug('soda-ts:runner')
  *  runner
  * )(query)
  */
-
-export const optionsForRequest = (
-  query: Query,
-  appToken: string | undefined
-): RequestOption => {
+export const createRawRunner = ({
+  appToken,
+  ext = 'json'
+}: AuthOpts = {}) => async (
+  query: Query
+): Promise<string> => {
+  const url = `https://${query.domain}/${query.apiPath}/${query.src}.${ext}`
   // TODO: refactor: cleanup param generation into a fn
   // use pure fn to generate the search params
   const clauseParams = queryClauseTransformer(query.clauses)
@@ -66,24 +68,34 @@ export const optionsForRequest = (
     `making req with headers: ${JSON.stringify(headers)}`
   )
 
-  return {
+  const options = {
     headers,
     searchParams
   }
-}
-export const createRunner = <T>({
-  appToken,
-  keysCamelCased,
-  ext = 'json'
-}: AuthOpts = {}) => async (query: Query): Promise<T> => {
-  const url = `https://${query.domain}/${query.apiPath}/${query.src}.${ext}`
-  const options = optionsForRequest(query, appToken)
+
   try {
-    const res = await got.get(url, options).json<T>()
+    const res = await got.get(url, options)
+    return res.body
+  } catch (e) {
+    throw new Error(e.message)
+  }
+}
+
+export const createJsonRunner = <T>({
+  appToken,
+  keysCamelCased
+}: AuthOpts = {}) => async (query: Query): Promise<T> => {
+  try {
+    const res = await createRawRunner({
+      appToken,
+      keysCamelCased,
+      ext: 'json'
+    })(query)
+    const data: T = JSON.parse(res)
     if (keysCamelCased) {
-      return camelCaseKeys(res)
+      return camelCaseKeys(data)
     } else {
-      return res
+      return data
     }
     // return res
   } catch (e) {
@@ -98,17 +110,18 @@ export const createRunner = <T>({
  */
 export const createRunner$ = <T>(authOpts?: AuthOpts) => (
   query: Query
-) => defer(() => from(createRunner<T>(authOpts)(query)))
+) => defer(() => from(createJsonRunner<T>(authOpts)(query)))
 
 export const createCsvRunner = ({
   appToken
 }: AuthOpts = {}) => async (
   query: Query
 ): Promise<string[][]> => {
-  const url = `https://${query.domain}/${query.apiPath}/${query.src}.csv`
-  const options = optionsForRequest(query, appToken)
   const output: Array<[]> = []
-  const res = await got.get(url, options)
+  const res = await createRawRunner({
+    appToken,
+    ext: 'csv'
+  })(query)
   const parse = parser({
     delimiter: ','
   })
@@ -118,7 +131,7 @@ export const createCsvRunner = ({
       output.push(record)
     }
   })
-  const stringArr = res.body
+  const stringArr = res
   const resBody: string[] = stringArr.split(' ')
   resBody.forEach((a) => parse.write(a))
   parse.end()
