@@ -226,7 +226,6 @@ describe('createRunner', () => {
       offset('0'),
       testRunner
     )(query)
-    console.log(testRunner)
     expect(res).toBeTruthy()
   })
 })
