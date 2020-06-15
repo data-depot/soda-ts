@@ -90,6 +90,7 @@
   },
   "dependencies": {
     "camelcase-keys": "^6.2.2",
+    "csv-parse": "^4.10.1",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "got": "^11.0.2",
