@@ -1,10 +1,10 @@
 // pkgs
+import * as Papa from 'papaparse'
 import { URLSearchParams } from 'url'
 import got from 'got'
 import debug from 'debug'
 import { defer, from } from 'rxjs'
 import camelCaseKeys from 'camelcase-keys'
-import parser from 'csv-parse'
 // local
 import { Query, AuthOpts } from './types'
 import { queryClauseTransformer } from './clauses'
@@ -117,23 +117,11 @@ export const createCsvRunner = ({
 }: AuthOpts = {}) => async (
   query: Query
 ): Promise<string[][]> => {
-  const output: Array<[]> = []
   const res = await createRawRunner({
     appToken,
     ext: 'csv'
   })(query)
-  const parse = parser({
-    delimiter: ','
-  })
-  parse.on('readable', function () {
-    let record: []
-    while ((record = parse.read())) {
-      output.push(record)
-    }
-  })
-  const stringArr = res
-  const resBody: string[] = stringArr.split(' ')
-  resBody.forEach((a) => parse.write(a))
-  parse.end()
-  return output
+  const result = Papa.parse(res)
+  const { data } = result
+  return data as string[][]
 }
