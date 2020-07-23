@@ -5,7 +5,6 @@ import got from 'got'
 import debug from 'debug'
 import { defer, from } from 'rxjs'
 import camelCaseKeys from 'camelcase-keys'
-// import parser from 'csv-parse'
 // local
 import { Query, AuthOpts } from './types'
 import { queryClauseTransformer } from './clauses'
@@ -118,7 +117,6 @@ export const createCsvRunner = ({
 }: AuthOpts = {}) => async (
   query: Query
 ): Promise<string[][]> => {
-  // const output: Array<[]> = []
   const res = await createRawRunner({
     appToken,
     ext: 'csv'

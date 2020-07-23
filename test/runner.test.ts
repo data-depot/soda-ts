@@ -207,7 +207,6 @@ describe('createRunner', () => {
       offset('0'),
       testRunner
     )(query)
-    console.log(res)
     expect(res).toBeTruthy()
     expect(res.length).toBeGreaterThanOrEqual(5)
   })
