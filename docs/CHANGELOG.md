@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/data-depot/soda-ts/compare/v0.4.0...v0.4.1) (2020-07-27)
+
+
+### Bug Fixes
+
+* **soda-ts:** fix csv support done ([e59c133](https://github.com/data-depot/soda-ts/commit/e59c133ef123fc10db9d25d9044f3cbc1e85299c))
+
 # [0.4.0](https://github.com/data-depot/soda-ts/compare/v0.3.0...v0.4.0) (2020-06-15)
 
 
